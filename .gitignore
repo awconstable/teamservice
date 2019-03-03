@@ -25,3 +25,9 @@ hs_err_pid*
 # IntelliJ
 .idea
 *.iml
+
+# Maven
+target
+
+# Vagrant
+.vagrant

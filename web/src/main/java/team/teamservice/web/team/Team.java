@@ -1,46 +1,52 @@
 package team.teamservice.web.team;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
-public class Team {
+import java.util.Collection;
+
+public class Team
+    {
+
     @Id
     private String id;
-    private final String teamId;
-    private final String teamName;
-    private final String platformName;
-    private final String domainName;
+    @Indexed(unique=true)
+    private final String slug;
+    private final String name;
+    private final String parentId;
+    private final Collection<Team> ancestors;
 
-    public Team(String teamId, String teamName, String platformName, String domainName) {
-        this.teamId = teamId;
-        this.teamName = teamName;
-        this.platformName = platformName;
-        this.domainName = domainName;
-    }
+    public Team(String slug, String name, String parentId, Collection<Team> ancestors)
+        {
+        this.slug = slug;
+        this.name = name;
+        this.parentId = parentId;
+        this.ancestors = ancestors;
+        }
+    
+    public String getId() { return id; }
 
-    public String getTeamId() {
-        return teamId;
-    }
+    public String getSlug()
+        {
+        return slug;
+        }
 
-    public String getTeamName() {
-        return teamName;
-    }
+    public String getName()
+        {
+        return name;
+        }
 
-    public String getPlatformName() {
-        return platformName;
-    }
-
-    public String getDomainName() {
-        return domainName;
-    }
+    public Collection<Team> getAncestors() { return ancestors; }
 
     @Override
-    public String toString() {
+    public String toString()
+        {
         return "Team{" +
                 "id='" + id + '\'' +
-                ", teamId='" + teamId + '\'' +
-                ", teamName='" + teamName + '\'' +
-                ", platformName='" + platformName + '\'' +
-                ", domainName='" + domainName + '\'' +
+                ", slug='" + slug + '\'' +
+                ", name='" + name + '\'' +
+                ", parentId='" + parentId + '\'' +
+                ", ancestors=" + ancestors +
                 '}';
+        }
     }
-}

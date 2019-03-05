@@ -8,6 +8,6 @@ import java.util.Optional;
 @RepositoryRestResource(collectionResourceRel = "team", path = "team")
 public interface TeamRepository extends MongoRepository<Team, String>  {
 
-Optional<Team> findByTeamId(String teamId);
+    Optional<Team> findBySlug(String slug);
 
 }

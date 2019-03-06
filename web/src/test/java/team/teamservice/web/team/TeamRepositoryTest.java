@@ -38,6 +38,12 @@ public class TeamRepositoryTest
         teams.add(team1);
         Team team2 = new Team("team2", "Team 2", team1.getId(), Arrays.asList(team1));
         teams.add(team2);
+        Team team3 = new Team("team3", "Team 3", team2.getId(), Arrays.asList(team1, team2));
+        teams.add(team3);
+        Team team4 = new Team("team4", "Team 4", team2.getId(), Arrays.asList(team1, team2));
+        teams.add(team4);
+        Team team5 = new Team("team5", "Team 5", team4.getId(), Arrays.asList(team1, team2, team4));
+        teams.add(team5);
 
         repository.saveAll(teams);
     }
@@ -48,12 +54,19 @@ public class TeamRepositoryTest
     }
 
     @Test
-    public void findByTeamIdTest() throws Exception
+    public void findBySlugTest() throws Exception
         {
 
         Optional<Team> team = repository.findBySlug("team1");
 
-        assert(team.isPresent());
+        assertThat(team.get().getName()).isEqualTo("Team 1");
+    }
+
+    @Test
+    public void checkAncestorList() {
+        Optional<Team> team = repository.findBySlug("team5");
+
+        assertThat(team.get().getAncestors().size()).isEqualTo(3);
     }
 
     @Test
@@ -62,7 +75,7 @@ public class TeamRepositoryTest
 
         List<Team> teams = repository.findAll();
 
-        assertThat(teams.size()).isEqualTo(2);
+        assertThat(teams.size()).isEqualTo(5);
     }
 
 }

@@ -9,7 +9,7 @@ public class TeamsController
     {
 
     @GetMapping("/teams")
-    public String graph(Model model)
+    public String teams(Model model)
         {
         return "teams";
         }

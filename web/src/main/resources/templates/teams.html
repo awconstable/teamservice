@@ -1,6 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Teams</title>
@@ -33,25 +33,26 @@
 <form id="team_form">
     <label for="team">Team</label><select id="team"></select>
     <input type="hidden" id="id" name="id">
-    <label for="team_id">Team ID</label><input type="text" id="team_id" name="team_id">
+    <label for="team_slug">Team ID</label><input type="text" id="team_slug" name="team_slug">
     <label for="team_name">Team Name</label><input type="text" id="team_name" name="team_name">
-    <label for="team_platform">Platform Name</label><input type="text" id="team_platform"
-                                                           name="team_platform">
-    <label for="team_domain">Domain Name</label><input type="text" id="team_domain"
-                                                       name="team_domain">
+    <label for="team_parent">Team Parent</label><select id="team_parent"></select>
+
     <input type="submit" value="Submit">
 </form>
 <script type="text/javascript">
 
 
     function validate() {
-        var input = $("#team_id").val();
-        var re = /[^a-zA-Z0-9_]+/g;
+        var input = $("#team_slug").val();
+        var re = /[^a-z0-9_\-]+/g;
 
         var test = re.test(input);
         if (test) {
-            $("#message").text("Team Id must contain letters, numbers and _ only");
+            $("#message").text("Team Id must contain lower case letters, numbers and _ or - only");
         }
+        
+        //TODO check parent is not a circular reference
+
         return test;
     }
 
@@ -61,8 +62,13 @@
 
         e.preventDefault();
 
-        if ($("#team_id").val() == "") {
-            $("#message").text("Team Id Required");
+        var teamElement = $('#team');
+        var teamSlug = $("#team_slug");
+        var teamName = $("#team_name");
+        var message =   $("#message");
+
+        if (teamSlug.val() === "") {
+            message.text("Team Id Required");
             return;
         }
         if (validate()) {
@@ -70,93 +76,110 @@
         }
 
         var team = {
-            teamId: $("#team_id").val(),
-            teamName: $("#team_name").val(),
-            platformName: $("#team_platform").val(),
-            domainName: $("#team_domain").val()
+            slug: teamSlug.val(),
+            name: teamName.val(),
+            parentId:$("#team_parent").val()
         };
 
         var method = "POST";
         var url = "/team/";
 
-        if ($('#id').val() != "") {
+        if (teamElement.val() !== "") {
             method = "PUT";
-            url = $('#id').val();
+            url = teamElement.val();
         }
 
-        $.ajax({
-            method: method,
-            url: url,
-            data: JSON.stringify(team),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                console.log(data + ': Submission was successful.');
-                loadTeams();
-            },
-            error: function (data) {
-                console.log(data + ': An error occurred.');
-            },
+        saveTeam(method, url, team).then(function(x){
+            console.log('Submission was successful');
+
+            loadTeams().then(function(a){
+                processTeamList(a);
+            }).then(function(){
+                var team = x._links.self.href;
+                console.log(team);
+                cb(x);
+            });
+        }).fail(function (x) {
+            console.log('An error occurred');
         });
 
-        $("#message").text("Team Saved");
+        message.text("Team Saved");
         return false;
 
     });
 
-    function loadTeams() {
-        $.ajax({
-            method: "GET",
-            url: "/team/?size=1000",
-            success: function (data) {
-                var teams = data._embedded.team;
-
-                $('#team').empty();
-                $('#team').append('<option value="">Select</option>');
-
-                for (var i = 0; i < teams.length; i++) {
-                    $('#team').append('<option value="' + teams[i]._links.self.href + '">' + teams[i].teamName + '</option>');
-                }
-            },
-            error: function (data) {
-                console.log(data);
-            },
+    function saveTeam(method, url, team){
+        console.log("Save team :" + team);
+        return $.ajax({
+            method: method,
+            url: url,
+            data: JSON.stringify(team),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
         });
     }
 
-    $(loadTeams());
+    function cb(data) {
+        console.log(data);
+        $("#id").val(data.id);
+        $("#team").val(data._links.self.href);
+        $("#team_slug").val(data.slug);
+        $("#team_name").val(data.name);
+        $("#team_parent").val(data.parentId);
+    }
 
-    $("#team").change(function () {
-        $("#message").text("");
-        if ("" == this.value) {
-            $("#id").val("");
-            $("#team_id").val("");
-            $("#team_name").val("");
-            $("#team_platform").val("");
-            $("#team_domain").val("");
-            return;
+    function loadTeams() {
+        console.log("Loading teams");
+        return $.ajax({
+            method: "GET",
+            url: "/team?size=1000"
+        });
+    }
+
+    function processTeamList(data){
+
+        var teams = data._embedded.team;
+
+        var teamElement = $('#team');
+        var teamParentElement = $('#team_parent');
+
+        teamElement.empty();
+        teamElement.append('<option value="">Select</option>');
+        teamParentElement.empty();
+        teamParentElement.append('<option value="">Select</option>');
+
+        for (var i = 0; i < teams.length; i++) {
+            teamElement.append('<option value="' + teams[i]._links.self.href + '">' + teams[i].name + '</option>');
+            teamParentElement.append('<option value="' + teams[i].id + '">' + teams[i].name + '</option>');
         }
+    }
 
-        var objectUrl = this.value;
+    $(loadTeams().done(processTeamList));
 
-        function cb(data) {
-            $("#id").val(objectUrl);
-            $("#team_id").val(data.teamId);
-            $("#team_name").val(data.teamName);
-            $("#team_platform").val(data.platformName);
-            $("#team_domain").val(data.domainName);
+    function loadTeam(teamId) {
+        $("#message").text("");
+        if ("" === teamId) {
+            $("#id").val("");
+            $("#team_slug").val("");
+            $("#team_name").val("");
+            $("#team_parent").val("");
+            return;
         }
 
         $.ajax({
             method: "GET",
-            url: objectUrl,
+            url: teamId,
             success: function (data) {
                 cb(data);
             },
             error: function (data) {
                 console.log(data);
-            },
+            }
         });
+    }
+
+    $("#team").change(function () {
+         loadTeam(this.value);
     });
 </script>
 </body>

@@ -36,6 +36,8 @@ public class Team
         return name;
         }
 
+    public String getParentId() { return parentId; }
+
     public Collection<Team> getAncestors() { return ancestors; }
 
     @Override

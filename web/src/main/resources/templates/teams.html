@@ -43,16 +43,18 @@
 
 
     function validate() {
+
+        if($("#id").val() === $("#team_parent").val()){
+            $("#message").text("A Team cannot be a parent of itself");
+            return true;
+        }
+
         var input = $("#team_slug").val();
         var re = /[^a-z0-9_\-]+/g;
-
         var test = re.test(input);
         if (test) {
             $("#message").text("Team Id must contain lower case letters, numbers and _ or - only");
         }
-        
-        //TODO check parent is not a circular reference
-
         return test;
     }
 

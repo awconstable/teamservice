@@ -15,13 +15,17 @@ public class Team
     private final String name;
     private final String parentId;
     private final Collection<Team> ancestors;
+    private final Collection<String> teamMemberEmails;
+    private final Collection<String> applicationIds;
 
-    public Team(String slug, String name, String parentId, Collection<Team> ancestors)
+    public Team(String slug, String name, String parentId, Collection<Team> ancestors, Collection<String> teamMemberEmails, Collection<String> applicationIds)
         {
         this.slug = slug;
         this.name = name;
         this.parentId = parentId;
         this.ancestors = ancestors;
+        this.teamMemberEmails = teamMemberEmails;
+        this.applicationIds = applicationIds;
         }
     
     public String getId() { return id; }
@@ -40,6 +44,10 @@ public class Team
 
     public Collection<Team> getAncestors() { return ancestors; }
 
+    public Collection<String> getTeamMemberEmails() { return teamMemberEmails; }
+
+    public Collection<String> getApplicationIds() { return applicationIds; }
+
     @Override
     public String toString()
         {
@@ -49,6 +57,8 @@ public class Team
                 ", name='" + name + '\'' +
                 ", parentId='" + parentId + '\'' +
                 ", ancestors=" + ancestors +
+                ", teamMemberEmails=" + teamMemberEmails +
+                ", applicationIds=" + applicationIds +
                 '}';
         }
     }

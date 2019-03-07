@@ -34,15 +34,15 @@ public class TeamRepositoryTest
     public void setUp() {
 
         List<Team> teams = new ArrayList<>();
-        Team team1 = new Team("team1", "Team 1", null, null);
+        Team team1 = new Team("team1", "Team 1", null, null, null, null);
         teams.add(team1);
-        Team team2 = new Team("team2", "Team 2", team1.getId(), Arrays.asList(team1));
+        Team team2 = new Team("team2", "Team 2", team1.getId(), Arrays.asList(team1), null, null);
         teams.add(team2);
-        Team team3 = new Team("team3", "Team 3", team2.getId(), Arrays.asList(team1, team2));
+        Team team3 = new Team("team3", "Team 3", team2.getId(), Arrays.asList(team1, team2), Arrays.asList("email1@test.test", "email2@test.test"), Arrays.asList("app1", "app2"));
         teams.add(team3);
-        Team team4 = new Team("team4", "Team 4", team2.getId(), Arrays.asList(team1, team2));
+        Team team4 = new Team("team4", "Team 4", team2.getId(), Arrays.asList(team1, team2), Arrays.asList("email3@test.test", "email4@test.test"), Arrays.asList("app3", "app4"));
         teams.add(team4);
-        Team team5 = new Team("team5", "Team 5", team4.getId(), Arrays.asList(team1, team2, team4));
+        Team team5 = new Team("team5", "Team 5", team4.getId(), Arrays.asList(team1, team2, team4), Arrays.asList("email5@test.test", "email6@test.test"), Arrays.asList("app5", "app6", "app7", "app8"));
         teams.add(team5);
 
         repository.saveAll(teams);

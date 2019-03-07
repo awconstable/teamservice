@@ -4,17 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Teams</title>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
 
     <style type="text/css">
-        input, select {
-            display: block;
-            font-size: 11px;
-            padding: 4px 2px;
-            border: solid 1px #aacfe4;
-            width: 70px;
-            margin: 2px 0 20px 10px;
-        }
 
         #message {
             display: block;
@@ -28,19 +22,74 @@
     </style>
 </head>
 <body>
-<div><h1>Teams</h1></div>
+<div data-role="page">
+    <div data-role="header">
+        <h1>Teams</h1>
+    </div>
 <span id="message"></span>
-<form id="team_form">
-    <label for="team">Team</label><select id="team"></select>
-    <input type="hidden" id="id" name="id">
-    <label for="team_slug">Team ID</label><input type="text" id="team_slug" name="team_slug">
-    <label for="team_name">Team Name</label><input type="text" id="team_name" name="team_name">
-    <label for="team_parent">Team Parent</label><select id="team_parent"></select>
-
-    <input type="submit" value="Submit">
-</form>
+    <div role="main" class="ui-content">
+        <form id="team_form">
+            <div class="ui-field-contain">
+                <label for="team">Team :</label><select id="team"></select>
+            </div>
+            <div class="ui-field-contain">
+                <input type="hidden" id="id" name="id">
+            </div>
+            <div class="ui-field-contain">
+                <label for="team_slug">Team ID :</label><input type="text" id="team_slug" name="team_slug">
+            </div>
+            <div class="ui-field-contain">
+                <label for="team_name">Team Name :</label><input type="text" id="team_name" name="team_name">
+            </div>
+            <div class="ui-field-contain">
+                <label for="team_parent">Team Parent :</label><select id="team_parent"></select>
+            </div>
+            <div class="ui-field-contain">
+                <label for="team_members_email">Team Member Email's :</label>
+                <ul id="team_members_email" data-role="listview">
+                </ul>
+            </div>
+            <div class="ui-field-contain">
+                <label for="add_team_members_email">Add a team members email :</label>
+                <input type="text" id="add_team_members_email" name="add_team_members_email">
+                <button id="add_team_members_email_button" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-inline">Add</button>
+            </div>
+            <br>
+            <div class="ui-field-contain">
+                <label for="team_application_ids">Team Application ID's :</label>
+                <ul id="team_application_ids" data-role="listview">
+                </ul>
+            </div>
+            <br>
+            <div class="ui-field-contain">
+                <label for="add_application_id">Add an Application ID :</label>
+                <input type="text" id="add_application_id" name="add_application_id">
+                <button id="add_application_id_button" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-inline">Add</button>
+            </div>
+            <div class="ui-field-contain">
+                <button class="ui-btn ui-shadow ui-corner-all ui-btn-b" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+    <div data-role="footer">
+        
+    </div>
+</div>
 <script type="text/javascript">
 
+    var addApplicationIdElement = $("#add_application_id");
+
+    $("#add_application_id_button").click(function () {
+        appendToList($("#team_application_ids"), addApplicationIdElement.val());
+        addApplicationIdElement.val("");
+    });
+
+    var addTeamMembersEmailElement = $("#add_team_members_email");
+
+    $("#add_team_members_email_button").click(function () {
+        appendToList($("#team_members_email"), addTeamMembersEmailElement.val());
+        addTeamMembersEmailElement.val("");
+    });
 
     function validate() {
 
@@ -77,10 +126,23 @@
             return;
         }
 
+        var teamMemberEmails = [];
+        $("#team_members_email li").each(function(i, elem) {
+            teamMemberEmails.push($(elem).text().trim());
+        });
+
+        var applicationIds = [];
+        $("#team_application_ids li").each(function(i, elem) {
+            console.log($(elem).text());
+            applicationIds.push($(elem).text().trim());
+        });
+
         var team = {
             slug: teamSlug.val(),
             name: teamName.val(),
-            parentId:$("#team_parent").val()
+            parentId: $("#team_parent").val(),
+            teamMemberEmails: teamMemberEmails,
+            applicationIds: applicationIds
         };
 
         var method = "POST";
@@ -101,7 +163,7 @@
                 console.log(team);
                 cb(x);
             });
-        }).fail(function (x) {
+        }).fail(function () {
             console.log('An error occurred');
         });
 
@@ -121,6 +183,10 @@
         });
     }
 
+    function appendToList(elem, value){
+        elem.append('<li class="ui-li-static ui-body-inherit ui-first-child ui-last-child">' + value + '</li><a href="#" class="ui-btn ui-btn-inline">Delete</a>');
+    }
+
     function cb(data) {
         console.log(data);
         $("#id").val(data.id);
@@ -128,6 +194,22 @@
         $("#team_slug").val(data.slug);
         $("#team_name").val(data.name);
         $("#team_parent").val(data.parentId);
+
+        var teamMembersEmailElement = $("#team_members_email");
+        teamMembersEmailElement.empty();
+        if(data.teamMemberEmails != null) {
+            for (var i = 0; i < data.teamMemberEmails.length; i++) {
+                appendToList(teamMembersEmailElement, data.teamMemberEmails[i]);
+            }
+        }
+
+        var teamApplicationIdsElement = $("#team_application_ids");
+        teamApplicationIdsElement.empty();
+        if(data.applicationIds != null) {
+            for (var j = 0; j < data.applicationIds.length; j++) {
+                appendToList(teamApplicationIdsElement, data.applicationIds[j]);
+            }
+        }
     }
 
     function loadTeams() {
@@ -165,6 +247,8 @@
             $("#team_slug").val("");
             $("#team_name").val("");
             $("#team_parent").val("");
+            $("#team_members_email").empty();
+            $("#team_application_ids").empty();
             return;
         }
 
@@ -184,5 +268,6 @@
          loadTeam(this.value);
     });
 </script>
+
 </body>
 </html>

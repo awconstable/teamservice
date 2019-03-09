@@ -7,26 +7,13 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
-
-    <style type="text/css">
-
-        #message {
-            display: block;
-            font-size: 11px;
-            padding: 4px 2px;
-            border: solid 1px darkred;
-            width: 70px;
-            margin: 2px 0 20px 10px;
-        }
-
-    </style>
 </head>
 <body>
 <div data-role="page">
     <div data-role="header">
         <h1>Teams</h1>
     </div>
-<span id="message"></span>
+<div id="message" data-role="popup" class="ui-content"></div>
     <div role="main" class="ui-content">
         <form id="team_form">
             <div class="ui-field-contain">
@@ -92,9 +79,11 @@
     });
 
     function validate() {
+        var messageElement = $("#message");
 
         if($("#id").val() === $("#team_parent").val()){
-            $("#message").text("A Team cannot be a parent of itself");
+            messageElement.text("A Team cannot be a parent of itself");
+            messageElement.popup("open");
             return true;
         }
 
@@ -102,7 +91,8 @@
         var re = /[^a-z0-9_\-]+/g;
         var test = re.test(input);
         if (test) {
-            $("#message").text("Team Id must contain lower case letters, numbers and _ or - only");
+            messageElement.text("Team Id must contain lower case letters, numbers and _ or - only");
+            messageElement.popup("open");
         }
         return test;
     }
@@ -116,10 +106,11 @@
         var teamElement = $('#team');
         var teamSlug = $("#team_slug");
         var teamName = $("#team_name");
-        var message =   $("#message");
+        var messageElement =   $("#message");
 
         if (teamSlug.val() === "") {
-            message.text("Team Id Required");
+            messageElement.text("Team Id Required");
+            messageElement.popup("open");
             return;
         }
         if (validate()) {
@@ -167,7 +158,8 @@
             console.log('An error occurred');
         });
 
-        message.text("Team Saved");
+        messageElement.text("Team Saved");
+        messageElement.popup("open");
         return false;
 
     });

@@ -9,14 +9,12 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 
 @RunWith(SpringRunner.class)
@@ -31,7 +29,8 @@ public class TeamRepositoryTest
     private TeamRepository repository;
 
     @Before
-    public void setUp() {
+    public void setUp()
+        {
 
         List<Team> teams = new ArrayList<>();
         Team team1 = new Team("team1", "Team 1", null, null, null, null);
@@ -46,12 +45,13 @@ public class TeamRepositoryTest
         teams.add(team5);
 
         repository.saveAll(teams);
-    }
+        }
 
     @After
-    public void clearDown() {
+    public void clearDown()
+        {
         repository.deleteAll();
-    }
+        }
 
     @Test
     public void findBySlugTest() throws Exception
@@ -60,14 +60,25 @@ public class TeamRepositoryTest
         Optional<Team> team = repository.findBySlug("team1");
 
         assertThat(team.get().getName()).isEqualTo("Team 1");
-    }
+        }
 
     @Test
-    public void checkAncestorList() {
+    public void checkAncestorList()
+        {
         Optional<Team> team = repository.findBySlug("team5");
 
         assertThat(team.get().getAncestors().size()).isEqualTo(3);
-    }
+        }
+
+    @Test
+    public void checkFindByTeamMemberEmail()
+        {
+        List<Team> teams = repository.findByTeamMemberEmailsIgnoreCase("Email1@Test.Test");
+
+        assertThat(teams.size()).isEqualTo(1);
+
+        assertThat(teams.get(0).getTeamMemberEmails()).contains("email1@test.test");
+        }
 
     @Test
     public void findAllTest() throws Exception
@@ -76,6 +87,6 @@ public class TeamRepositoryTest
         List<Team> teams = repository.findAll();
 
         assertThat(teams.size()).isEqualTo(5);
-    }
+        }
 
-}
+    }

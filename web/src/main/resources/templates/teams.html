@@ -67,6 +67,9 @@
     var addApplicationIdElement = $("#add_application_id");
 
     $("#add_application_id_button").click(function () {
+        if(validateNoDuplicates($("#team_application_ids li"), addApplicationIdElement.val(), "Duplicate application id's are not allowed") || addApplicationIdElement.val() === ""){
+            return;
+        }
         appendToList($("#team_application_ids"), addApplicationIdElement.val());
         addApplicationIdElement.val("");
     });
@@ -74,6 +77,9 @@
     var addTeamMembersEmailElement = $("#add_team_members_email");
 
     $("#add_team_members_email_button").click(function () {
+        if(validateNoDuplicates($("#team_members_email li"), addTeamMembersEmailElement.val(), "Duplicate email address' are not allowed") || validateEmail(addTeamMembersEmailElement.val())) {
+            return;
+        }
         appendToList($("#team_members_email"), addTeamMembersEmailElement.val());
         addTeamMembersEmailElement.val("");
     });
@@ -95,6 +101,36 @@
             messageElement.popup("open");
         }
         return test;
+    }
+
+    function validateNoDuplicates(parentListElem, value, msg){
+        var lowerValue = value.toLowerCase();
+        var valid = false;
+        parentListElem.each(function(i, elem){
+            if(lowerValue === $(elem).text().trim().toLowerCase()){
+                var messageElem = $("#message");
+                messageElem.text(msg);
+                messageElem.popup("open");
+                return valid = true;
+            }
+        });
+        return valid;
+    }
+
+    function validateEmail(email) {
+
+        if(email === ""){
+            return true;
+        }
+
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test(email)) {
+            var messageElem = $("#message");
+            messageElem.text("Invalid email address");
+            messageElem.popup("open");
+            return true;
+        }
+        return false;
     }
 
     var frm = $('#team_form');

@@ -183,8 +183,16 @@
         });
     }
 
+    var listIdCount = 0;
+
     function appendToList(elem, value){
-        elem.append('<li class="ui-li-static ui-body-inherit ui-first-child ui-last-child">' + value + '</li><a href="#" class="ui-btn ui-btn-inline">Delete</a>');
+        var listId = listIdCount;
+        elem.append('<li id="list-item-' + listId + '" class="ui-li-static ui-body-inherit ui-first-child ui-last-child">' + value + '</li><a id="list-delete-button-' + listId + '" href="#" class="ui-btn ui-btn-inline">Delete</a>');
+        $('#list-delete-button-' + listId).click(function(){
+            $('#list-item-' + listId ).remove();
+            $(this).remove();
+        });
+        listIdCount++;
     }
 
     function cb(data) {

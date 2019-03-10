@@ -86,8 +86,8 @@
 
     function validate() {
         var messageElement = $("#message");
-
-        if($("#id").val() === $("#team_parent").val()){
+        var teamIdElem = $("#id");
+        if(teamIdElem.val() !== "" && teamIdElem.val() === $("#team_parent").val()){
             messageElement.text("A Team cannot be a parent of itself");
             messageElement.popup("open");
             return true;
@@ -167,7 +167,7 @@
         var team = {
             slug: teamSlug.val(),
             name: teamName.val(),
-            parentId: $("#team_parent").val(),
+            parentSlug: $("#team_parent").val(),
             teamMemberEmails: teamMemberEmails,
             applicationIds: applicationIds
         };
@@ -225,14 +225,16 @@
 
     function cb(data) {
         var teamParentElement = $('#team_parent');
+        var teamElement = $("#team");
 
         console.log(data);
         $("#id").val(data.id);
-        $("#team").val(data._links.self.href);
+        teamElement.val(data._links.self.href);
         $("#team_slug").val(data.slug);
         $("#team_name").val(data.name);
-        teamParentElement.val(data.parentId);
+        teamParentElement.val(data.parentSlug);
 
+        teamElement.selectmenu("refresh", true);
         teamParentElement.selectmenu("refresh", true);
 
         var teamMembersEmailElement = $("#team_members_email");
@@ -274,7 +276,7 @@
 
         for (var i = 0; i < teams.length; i++) {
             teamElement.append('<option value="' + teams[i]._links.self.href + '">' + teams[i].name + '</option>');
-            teamParentElement.append('<option value="' + teams[i].id + '">' + teams[i].name + '</option>');
+            teamParentElement.append('<option value="' + teams[i].slug + '">' + teams[i].name + '</option>');
         }
     }
 

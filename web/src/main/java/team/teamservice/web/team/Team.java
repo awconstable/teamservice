@@ -13,16 +13,16 @@ public class Team
     @Indexed(unique=true)
     private final String slug;
     private final String name;
-    private final String parentId;
+    private final String parentSlug;
     private final Collection<Team> ancestors;
     private final Collection<String> teamMemberEmails;
     private final Collection<String> applicationIds;
 
-    public Team(String slug, String name, String parentId, Collection<Team> ancestors, Collection<String> teamMemberEmails, Collection<String> applicationIds)
+    public Team(String slug, String name, String parentSlug, Collection<Team> ancestors, Collection<String> teamMemberEmails, Collection<String> applicationIds)
         {
         this.slug = slug;
         this.name = name;
-        this.parentId = parentId;
+        this.parentSlug = parentSlug;
         this.ancestors = ancestors;
         this.teamMemberEmails = teamMemberEmails;
         this.applicationIds = applicationIds;
@@ -40,7 +40,7 @@ public class Team
         return name;
         }
 
-    public String getParentId() { return parentId; }
+    public String getParentSlug() { return parentSlug; }
 
     public Collection<Team> getAncestors() { return ancestors; }
 
@@ -55,7 +55,7 @@ public class Team
                 "id='" + id + '\'' +
                 ", slug='" + slug + '\'' +
                 ", name='" + name + '\'' +
-                ", parentId='" + parentId + '\'' +
+                ", parentSlug='" + parentSlug + '\'' +
                 ", ancestors=" + ancestors +
                 ", teamMemberEmails=" + teamMemberEmails +
                 ", applicationIds=" + applicationIds +

@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "team", path = "team")
-public interface TeamRepository extends MongoRepository<Team, String>  {
+public interface TeamRepository extends MongoRepository<Team, String>, TeamRepositoryCustom  {
 
     Optional<Team> findBySlug(@Param("slug") String slug);
 
     List<Team> findByTeamMemberEmailsIgnoreCase(@Param("email") String email);
+
 }

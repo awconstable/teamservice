@@ -2,9 +2,11 @@ package team.teamservice.web.team;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collection;
 
+@Document
 public class Team
     {
 
@@ -14,12 +16,12 @@ public class Team
     private final String slug;
     private final String name;
     private final String parentSlug;
-    private final Collection<Team> ancestors;
-    private final Collection<Team> children;
+    private final Collection<TeamRelation> ancestors;
+    private final Collection<TeamRelation> children;
     private final Collection<String> teamMemberEmails;
     private final Collection<String> applicationIds;
 
-    public Team(String slug, String name, String parentSlug, Collection<Team> ancestors, Collection<Team> children, Collection<String> teamMemberEmails, Collection<String> applicationIds)
+    public Team(String slug, String name, String parentSlug, Collection<TeamRelation> ancestors, Collection<TeamRelation> children, Collection<String> teamMemberEmails, Collection<String> applicationIds)
         {
         this.slug = slug;
         this.name = name;
@@ -44,9 +46,9 @@ public class Team
 
     public String getParentSlug() { return parentSlug; }
 
-    public Collection<Team> getAncestors() { return ancestors; }
+    public Collection<TeamRelation> getAncestors() { return ancestors; }
 
-    public Collection<Team> getChildren() { return children; }
+    public Collection<TeamRelation> getChildren() { return children; }
 
     public Collection<String> getTeamMemberEmails() { return teamMemberEmails; }
 

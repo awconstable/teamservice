@@ -189,13 +189,15 @@
                 var team = x._links.self.href;
                 console.log(team);
                 cb(x);
+                messageElement.text("Team Saved");
+                messageElement.popup("open");
             });
-        }).fail(function () {
+        }).fail(function (xhr, status, error) {
             console.log('An error occurred');
+            messageElement.text("Team Save Failed : " + xhr.responseJSON.message);
+            messageElement.popup("open");
         });
-
-        messageElement.text("Team Saved");
-        messageElement.popup("open");
+        
         return false;
 
     });

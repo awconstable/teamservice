@@ -10,15 +10,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class TeamController {
+public class TeamController
+    {
 
     @Autowired
     private TeamRepository repository;
 
-    @RequestMapping("/team/ancestors/{id}")
+    @RequestMapping("/team/ancestors/{slug}")
     @ResponseBody
-    public List<Team> teamAncestors(Model model, @PathVariable String id) {
-         return repository.findAncestors(id);
-    }
+    public List<Team> teamAncestors(Model model, @PathVariable String slug)
+        {
+        return repository.findAncestors(slug);
+        }
 
-}
+    @RequestMapping("/team/children/{slug}")
+    @ResponseBody
+    public List<Team> teamChildren(Model model, @PathVariable String slug)
+        {
+        return repository.findChildren(slug);
+        }
+
+    }

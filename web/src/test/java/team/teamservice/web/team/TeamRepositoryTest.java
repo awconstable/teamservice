@@ -32,15 +32,15 @@ public class TeamRepositoryTest
     public void setUp() throws IOException
         {
 
-        Team team1 = new Team("team1", "Team 1", null, null, null, null);
+        Team team1 = new Team("team1", "Team 1", null, null, null, null, null);
         teams.add(team1);
-        Team team2 = new Team("team2", "Team 2", team1.getSlug(), null, null, null);
+        Team team2 = new Team("team2", "Team 2", team1.getSlug(), null, null, null, null);
         teams.add(team2);
-        Team team3 = new Team("team3", "Team 3", team2.getSlug(), null, Arrays.asList("email1@test.test", "email2@test.test"), Arrays.asList("app1", "app2"));
+        Team team3 = new Team("team3", "Team 3", team2.getSlug(), null, null, Arrays.asList("email1@test.test", "email2@test.test"), Arrays.asList("app1", "app2"));
         teams.add(team3);
-        Team team4 = new Team("team4", "Team 4", team3.getSlug(), null, Arrays.asList("email3@test.test", "email4@test.test"), Arrays.asList("app3", "app4"));
+        Team team4 = new Team("team4", "Team 4", team3.getSlug(), null, null, Arrays.asList("email3@test.test", "email4@test.test"), Arrays.asList("app3", "app4"));
         teams.add(team4);
-        Team team5 = new Team("team5", "Team 5", team4.getSlug(), null, Arrays.asList("email5@test.test", "email6@test.test"), Arrays.asList("app5", "app6", "app7", "app8"));
+        Team team5 = new Team("team5", "Team 5", team4.getSlug(), null, null, Arrays.asList("email5@test.test", "email6@test.test"), Arrays.asList("app5", "app6", "app7", "app8"));
         teams.add(team5);
 
         repository.saveAll(teams);
@@ -89,6 +89,17 @@ public class TeamRepositoryTest
         assertThat(ancestorTeams.size()).isEqualTo(1);
 
         assertThat(ancestorTeams.get(0).getAncestors().size()).isEqualTo(4);
+        }
+
+    @Test
+    public void findChildren() throws Exception
+        {
+
+        List<Team> childTeams = repository.findChildren(teams.get(0).getSlug());
+
+        assertThat(childTeams.size()).isEqualTo(1);
+
+        assertThat(childTeams.get(0).getChildren().size()).isEqualTo(4);
         }
 
     }

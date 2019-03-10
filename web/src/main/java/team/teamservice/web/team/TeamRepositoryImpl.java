@@ -35,17 +35,27 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
 
         AggregationResults<Team> result = mongoTemplate.aggregate(agg, Team.class);
 
-        System.out.println(result.getRawResults());
-
-
         List<Team> teams = result.getMappedResults();
 
         return teams;
         }
 
     @Override
-    public List<Team> findChildren(String id)
+    public List<Team> findChildren(String slug)
         {
-        return null;
+
+        TypedAggregation<Team> agg = Aggregation.newAggregation(Team.class,
+                match(Criteria.where("slug").is(slug)),
+                Aggregation.graphLookup("team")
+                        .startWith("slug")
+                        .connectFrom("slug")
+                        .connectTo("parentSlug")
+                        .as("children"));
+
+        AggregationResults<Team> result = mongoTemplate.aggregate(agg, Team.class);
+
+        List<Team> teams = result.getMappedResults();
+
+        return teams;
         }
     }

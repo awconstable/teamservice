@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface TeamRepositoryCustom
     {
-        List<Team> findAncestors(String id);
+        List<Team> findAncestors(String slug);
 
-        List<Team> findChildren(String id);
+        List<Team> findChildren(String slug);
     }

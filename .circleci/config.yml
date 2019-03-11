@@ -79,6 +79,10 @@ jobs:
       - run:
           name: Publish Docker image with Jib
           command: |
+            if [ -n "$CIRCLE_TAG" ]; \
+            then \
+                LATEST_DOCKER_TAG=-Djib.to.tags=latest; \
+            fi; \
             mvn compile jib:build -B -DskipTests=true \
               -Dbuild.number=${CIRCLE_BUILD_NUM} \
               -Dcommit.hash=${CIRCLE_SHA1} \

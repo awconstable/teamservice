@@ -45,7 +45,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--spring.data.mongodb.host=<mog
 ### Create Docker image
 
 ```
-./mvnw compile jib:build
+mvn compile jib:build
 ```
 
 ### Run app as a Docker container

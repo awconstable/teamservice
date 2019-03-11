@@ -70,10 +70,10 @@ jobs:
       - run:
           name: If we're building a tag, set the version to that of the tag
           command: |
-            if [ -n "$CIRCLE_TAG" ] \
+            if [ -n "$CIRCLE_TAG" ]; \
             then \
               mvn versions:set -DnewVersion=${CIRCLE_TAG} \
-            fi
+            fi;
       - run: cd web
       - run:
           name: Publish Docker image with Jib

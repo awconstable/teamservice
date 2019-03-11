@@ -73,7 +73,6 @@ jobs:
             if [ -n "$CIRCLE_TAG" ]; \
             then \
               mvn versions:set -DnewVersion=${CIRCLE_TAG}; \
-              export LATEST_DOCKER_TAG=-Djib.to.tags=latest; \
             fi
       - run: cd web
       - run:

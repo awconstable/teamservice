@@ -45,7 +45,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--spring.data.mongodb.host=<mog
 ### Create Docker image
 
 ```
-mvn dockerfile:build dockerfile:tag
+./mvnw compile jib:build
 ```
 
 ### Run app as a Docker container
@@ -55,7 +55,7 @@ mvn dockerfile:build dockerfile:tag
 ```
 docker stop teamservice
 docker rm teamservice
-docker run --name teamservice -d -p 8080:8080 --network <mongo network> -e spring_data_mongodb_host=<mongo host> -e spring_data_mongodb_port=<mongo port> -e spring_data_mongodb_database=<mondo db> team/teamservice:0.0.1-SNAPSHOT
+docker run --name teamservice -d -p 8080:8080 --link <mongo container> -e spring_data_mongodb_host=<mongo host> -e spring_data_mongodb_port=<mongo port> -e spring_data_mongodb_database=<mondo db> awconstable/teamservice:latest
 ```
 
 

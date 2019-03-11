@@ -2,11 +2,23 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - unit-test
+      - publish-docker:
+          requires:
+            - unit-test
+          filters:
+            branches:
+              only: master
+
 version: 2
 jobs:
-  build:
+  unit-test:
     docker:
-    # specify the version you desire here
+      # specify the version you desire here
       - image: circleci/openjdk:11-jdk
 
     # Specify service dependencies here if necessary
@@ -22,21 +34,49 @@ jobs:
       MAVEN_OPTS: -Xmx3200m
 
     steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: mvn dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+
+      # run tests!
+      - run: mvn integration-test
+
+publish-docker:
+  docker:
+    - image: circleci/openjdk:8-jdk-browsers
+  working_directory: ~/repo
+  steps:
     - checkout
 
-    # Download and cache dependencies
     - restore_cache:
         keys:
-        - v1-dependencies-{{ checksum "pom.xml" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
+          - v1-dependencies-{{ checksum "pom.xml" }}
+          - v1-dependencies-
 
     - run: mvn dependency:go-offline
 
-    - save_cache:
-        paths:
-        - ~/.m2
-        key: v1-dependencies-{{ checksum "pom.xml" }}
+    - run: cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
 
-    # run tests!
-    - run: mvn integration-test
+    - run: echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
+    - run: cd web
+    - run:
+        name: Publish Docker image with Jib
+        command: |
+          ./mvnw compile jib:build -B -DskipTests=true \
+            -Dbuild.number=${CIRCLE_BUILD_NUM} \
+            -Dcommit.hash=${CIRCLE_SHA1} \
+            -Dcircle.workflow.guid=${CIRCLE_WORKFLOW_ID} \
+            -Dbuild.user=${CIRCLE_PROJECT_USERNAME} \
+            -Dbuild.repo=${CIRCLE_PROJECT_REPONAME}

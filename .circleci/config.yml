@@ -67,9 +67,12 @@ jobs:
       - run: cp .mvn/wrapper/settings.xml ~/.m2/settings.xml
 
       - run: echo "<settingsSecurity><master>${maven_security_master}</master></settingsSecurity>" > ~/.m2/settings-security.xml
-      - run: if [ -n "$CIRCLE_TAG" ] \
+      - run:
+          name: If we're building a tag, set the version to that of the tag
+          command: |
+            if [ -n "$CIRCLE_TAG" ] \
             then \
-              mvn versions:set -DnewVersion=${CIRCLE_TAG} \
+              mvn versions:set -DnewVersion=${CIRCLE_TAG}
             fi
       - run: cd web
       - run:

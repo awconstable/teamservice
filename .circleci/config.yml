@@ -72,7 +72,7 @@ jobs:
           command: |
             if [ -n "$CIRCLE_TAG" ] \
             then \
-              mvn versions:set -DnewVersion=${CIRCLE_TAG}
+              mvn versions:set -DnewVersion=${CIRCLE_TAG} \
             fi
       - run: cd web
       - run:

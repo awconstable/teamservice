@@ -234,7 +234,10 @@
 
         console.log(data);
         teamElement.val(data._links.self.href);
-        $("#team_slug").val(data.slug);
+
+        var teamSlugElem = $("#team_slug");
+        teamSlugElem.prop( "disabled", true );
+        teamSlugElem.val(data.slug);
         $("#team_name").val(data.name);
         teamParentElement.val(data.parentSlug);
 
@@ -290,7 +293,9 @@
         $("#message").text("");
         if ("" === teamId) {
             var teamParentElem = $("#team_parent");
-            $("#team_slug").val("");
+            var teamSlugElem = $("#team_slug");
+            teamSlugElem.prop( "disabled", false );
+            teamSlugElem.val("");
             $("#team_name").val("");
             teamParentElem.val("");
             teamParentElem.selectmenu("refresh", true);

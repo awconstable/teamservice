@@ -72,8 +72,8 @@ jobs:
           command: |
             if [ -n "$CIRCLE_TAG" ]; \
             then \
-              mvn versions:set -DnewVersion=${CIRCLE_TAG} \
-            fi;
+              mvn versions:set -DnewVersion=${CIRCLE_TAG}; \
+            fi
       - run: cd web
       - run:
           name: Publish Docker image with Jib

@@ -1,4 +1,4 @@
-FROM openjdk:11.0.2-jdk-slim
+FROM openjdk:11-jdk-slim
 
 ENTRYPOINT ["/usr/bin/java", "-jar", "/usr/share/teamservice/teamservice.jar"]
 

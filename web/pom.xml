@@ -80,7 +80,18 @@
 
     <build>
         <plugins>
-
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <configuration>
+                    <to>
+                        <image>registry.hub.docker.com/awconstable/teamservice</image>
+                    </to>
+                    <from>
+                        <image>gcr.io/distroless/java:11</image>
+                    </from>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>

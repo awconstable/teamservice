@@ -18,18 +18,18 @@ public class Team
     private final String parentSlug;
     private final Collection<TeamRelation> ancestors;
     private final Collection<TeamRelation> children;
-    private final Collection<String> teamMemberEmails;
-    private final Collection<String> applicationIds;
+    private final Collection<TeamMember> teamMembers;
+    private final Collection<Application> applications;
 
-    public Team(String slug, String name, String parentSlug, Collection<TeamRelation> ancestors, Collection<TeamRelation> children, Collection<String> teamMemberEmails, Collection<String> applicationIds)
+    public Team(String slug, String name, String parentSlug, Collection<TeamRelation> ancestors, Collection<TeamRelation> children, Collection<TeamMember> teamMembers, Collection<Application> applications)
         {
         this.slug = slug;
         this.name = name;
         this.parentSlug = parentSlug;
         this.ancestors = ancestors;
         this.children = children;
-        this.teamMemberEmails = teamMemberEmails;
-        this.applicationIds = applicationIds;
+        this.teamMembers = teamMembers;
+        this.applications = applications;
         }
     
     public String getId() { return id; }
@@ -50,9 +50,9 @@ public class Team
 
     public Collection<TeamRelation> getChildren() { return children; }
 
-    public Collection<String> getTeamMemberEmails() { return teamMemberEmails; }
+    public Collection<TeamMember> getTeamMembers() { return teamMembers; }
 
-    public Collection<String> getApplicationIds() { return applicationIds; }
+    public Collection<Application> getApplications() { return applications; }
 
     @Override
     public String toString()
@@ -64,8 +64,8 @@ public class Team
                 ", parentSlug='" + parentSlug + '\'' +
                 ", ancestors=" + ancestors +
                 ", children=" + children +
-                ", teamMemberEmails=" + teamMemberEmails +
-                ", applicationIds=" + applicationIds +
+                ", teamMembers=" + teamMembers +
+                ", applications=" + applications +
                 '}';
         }
     }

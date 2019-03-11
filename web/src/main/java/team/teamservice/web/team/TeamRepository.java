@@ -12,6 +12,6 @@ public interface TeamRepository extends MongoRepository<Team, String>, TeamRepos
 
     Optional<Team> findBySlug(@Param("slug") String slug);
 
-    List<Team> findByTeamMemberEmailsIgnoreCase(@Param("email") String email);
+    List<Team> findByTeamMembersEmailIgnoreCase(@Param("email") String email);
 
 }

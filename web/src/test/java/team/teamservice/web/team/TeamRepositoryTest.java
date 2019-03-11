@@ -9,10 +9,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,11 +31,11 @@ public class TeamRepositoryTest
         teams.add(team1);
         Team team2 = new Team("team2", "Team 2", team1.getSlug(), null, null, null, null);
         teams.add(team2);
-        Team team3 = new Team("team3", "Team 3", team2.getSlug(), null, null, Arrays.asList("email1@test.test", "email2@test.test"), Arrays.asList("app1", "app2"));
+        Team team3 = new Team("team3", "Team 3", team2.getSlug(), null, null, Arrays.asList(new TeamMember("email1@test.test",null), new TeamMember("email2@test.test", null)), Arrays.asList(new Application("app1", null), new Application("app2", null)));
         teams.add(team3);
-        Team team4 = new Team("team4", "Team 4", team3.getSlug(), null, null, Arrays.asList("email3@test.test", "email4@test.test"), Arrays.asList("app3", "app4"));
+        Team team4 = new Team("team4", "Team 4", team3.getSlug(), null, null, Arrays.asList(new TeamMember("email3@test.test",null), new TeamMember("email4@test.test", null)), Arrays.asList(new Application("app3", null), new Application("app4", null)));
         teams.add(team4);
-        Team team5 = new Team("team5", "Team 5", team4.getSlug(), null, null, Arrays.asList("email5@test.test", "email6@test.test"), Arrays.asList("app5", "app6", "app7", "app8"));
+        Team team5 = new Team("team5", "Team 5", team4.getSlug(), null, null, Arrays.asList(new TeamMember("email5@test.test",null), new TeamMember("email6@test.test", null)), Arrays.asList(new Application("app5", null), new Application("app6", null),new Application("app7", null), new Application("app8", null)));
         teams.add(team5);
 
         repository.saveAll(teams);
@@ -62,11 +59,19 @@ public class TeamRepositoryTest
     @Test
     public void checkFindByTeamMemberEmail()
         {
-        List<Team> teams = repository.findByTeamMemberEmailsIgnoreCase("Email1@Test.Test");
+        List<Team> teams = repository.findByTeamMembersEmailIgnoreCase("Email1@Test.Test");
 
         assertThat(teams.size()).isEqualTo(1);
 
-        assertThat(teams.get(0).getTeamMemberEmails()).contains("email1@test.test");
+        Collection<TeamMember> members = teams.get(0).getTeamMembers();
+        boolean emailMatch = false;
+        for(TeamMember member:members){
+            if("email1@test.test".equals(member.getEmail())){
+                emailMatch = true;
+            }
+        }
+        
+        assertThat(emailMatch).isEqualTo(true);
         }
 
     @Test

@@ -51,9 +51,9 @@ public class TeamRepositoryTest
     public void findBySlugTest() throws Exception
         {
 
-        Optional<Team> team = repository.findBySlug("team1");
+        Team team = repository.findBySlug("team1");
 
-        assertThat(team.get().getName()).isEqualTo("Team 1");
+        assertThat(team.getName()).isEqualTo("Team 1");
         }
 
     @Test

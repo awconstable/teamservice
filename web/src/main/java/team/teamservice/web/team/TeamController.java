@@ -30,4 +30,11 @@ public class TeamController
         return repository.findChildren(slug);
         }
 
+    @RequestMapping("/team/relatives/{slug}")
+    @ResponseBody
+    public Team teamIncludingRelatives(Model model, @PathVariable String slug)
+        {
+        return repository.findBySlug(slug);
+        }
+
     }

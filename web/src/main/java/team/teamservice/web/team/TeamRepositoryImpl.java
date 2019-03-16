@@ -58,4 +58,31 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
 
         return teams;
         }
+
+    @Override
+    public Team findBySlug(String slug)
+        {
+        TypedAggregation<Team> agg = Aggregation.newAggregation(Team.class,
+                match(Criteria.where("slug").is(slug)),
+                Aggregation.graphLookup("team")
+                        .startWith("slug")
+                        .connectFrom("slug")
+                        .connectTo("parentSlug")
+                        .as("children"),
+                Aggregation.graphLookup("team")
+                        .startWith("parentSlug")
+                        .connectFrom("parentSlug")
+                        .connectTo("slug")
+                        .as("ancestors"));
+
+        AggregationResults<Team> result = mongoTemplate.aggregate(agg, Team.class);
+
+        Team team = result.getUniqueMappedResult();
+
+        System.out.println(result.getRawResults());
+
+        return team;
+        }
+
+
     }

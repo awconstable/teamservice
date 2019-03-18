@@ -46,7 +46,7 @@ public class TeamController
 
         List<TeamRelation> teamHierarchy = new ArrayList<>();
 
-        List<Team> teams = repository.findAll();
+        List<Team> teams = repository.findHierarchy();
 
         for(Team team: teams){
             TeamRelation rootTemp = team.getTeamRelation();

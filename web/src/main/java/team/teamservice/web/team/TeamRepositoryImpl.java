@@ -85,7 +85,7 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
         }
 
     @Override
-    public List<Team> findAll()
+    public List<Team> findHierarchy()
         {
         TypedAggregation<Team> agg = Aggregation.newAggregation(Team.class,
                 match(Criteria.where("parentSlug").is("")),

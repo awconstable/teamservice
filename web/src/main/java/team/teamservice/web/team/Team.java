@@ -54,6 +54,10 @@ public class Team
 
     public Collection<Application> getApplications() { return applications; }
 
+    public TeamRelation getTeamRelation() {
+        return new TeamRelation(this.slug, this.name, this.parentSlug, null);
+    }
+
     @Override
     public String toString()
         {

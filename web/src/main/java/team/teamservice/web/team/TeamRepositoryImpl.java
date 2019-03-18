@@ -13,7 +13,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 
 public class TeamRepositoryImpl implements TeamRepositoryCustom
     {
-
+    
     private final MongoTemplate mongoTemplate;
 
     @Autowired
@@ -82,6 +82,26 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
         System.out.println(result.getRawResults());
 
         return team;
+        }
+
+    @Override
+    public List<Team> findAll()
+        {
+        TypedAggregation<Team> agg = Aggregation.newAggregation(Team.class,
+                match(Criteria.where("parentSlug").is("")),
+                Aggregation.graphLookup("team")
+                        .startWith("slug")
+                        .connectFrom("slug")
+                        .connectTo("parentSlug")
+                        .as("children"));
+
+        AggregationResults<Team> result = mongoTemplate.aggregate(agg, Team.class);
+
+        List<Team> teams = result.getMappedResults();
+
+        System.out.println(result.getRawResults());
+
+        return teams;
         }
 
 

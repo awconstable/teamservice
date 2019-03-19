@@ -61,6 +61,13 @@ public class TeamController
          return teamHierarchy;
         }
 
+    @RequestMapping("/teams/all")
+    @ResponseBody
+    public List<Team> allTeams()
+        {
+        return repository.findAll();
+        }
+
     private List<TeamRelation> findChildren(String parentSlug, Collection<TeamRelation> children){
         List<TeamRelation> directChildren = new ArrayList<>();
         for(TeamRelation child: children){

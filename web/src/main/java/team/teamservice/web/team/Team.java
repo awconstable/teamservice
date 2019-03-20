@@ -1,5 +1,6 @@
 package team.teamservice.web.team;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -54,6 +55,7 @@ public class Team
 
     public Collection<Application> getApplications() { return applications; }
 
+    @JsonIgnore
     public TeamRelation getTeamRelation() {
         return new TeamRelation(this.slug, this.name, this.parentSlug, null);
     }

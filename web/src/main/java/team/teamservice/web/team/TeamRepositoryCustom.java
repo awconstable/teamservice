@@ -10,5 +10,7 @@ public interface TeamRepositoryCustom
         
         Team findBySlug(String slug);
 
-        List<Team> findHierarchy();
+        List<Team> findCompleteHierarchy();
+
+        List<Team> findHierarchyBelow(String slug);
     }

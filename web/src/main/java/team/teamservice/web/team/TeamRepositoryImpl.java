@@ -35,9 +35,7 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
 
         AggregationResults<Team> result = mongoTemplate.aggregate(agg, Team.class);
 
-        List<Team> teams = result.getMappedResults();
-
-        return teams;
+        return result.getMappedResults();
         }
 
     @Override
@@ -54,9 +52,7 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
 
         AggregationResults<Team> result = mongoTemplate.aggregate(agg, Team.class);
 
-        List<Team> teams = result.getMappedResults();
-
-        return teams;
+        return result.getMappedResults();
         }
 
     @Override
@@ -84,11 +80,21 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
         return team;
         }
 
+
     @Override
-    public List<Team> findHierarchy()
+    public List<Team> findCompleteHierarchy(){
+        return findHierarchy("parentSlug", "");
+    }
+
+    @Override
+    public List<Team> findHierarchyBelow(String slug) {
+        return findHierarchy("slug", slug);
+    }
+    
+    private List<Team> findHierarchy(String filter, String slug)
         {
         TypedAggregation<Team> agg = Aggregation.newAggregation(Team.class,
-                match(Criteria.where("parentSlug").is("")),
+                match(Criteria.where(filter).is(slug)),
                 Aggregation.graphLookup("team")
                         .startWith("slug")
                         .connectFrom("slug")

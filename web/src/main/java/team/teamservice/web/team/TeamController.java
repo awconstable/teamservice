@@ -1,7 +1,6 @@
 package team.teamservice.web.team;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,38 +14,49 @@ import java.util.List;
 public class TeamController
     {
 
+    private final TeamRepository repository;
+
     @Autowired
-    private TeamRepository repository;
+    public TeamController(TeamRepository repository)
+        {
+        this.repository = repository;
+        }
 
     @RequestMapping("/teams/ancestors/{slug}")
     @ResponseBody
-    public List<Team> teamAncestors(Model model, @PathVariable String slug)
+    public List<Team> teamAncestors(@PathVariable String slug)
         {
         return repository.findAncestors(slug);
         }
 
     @RequestMapping("/teams/children/{slug}")
     @ResponseBody
-    public List<Team> teamChildren(Model model, @PathVariable String slug)
+    public List<Team> teamChildren(@PathVariable String slug)
         {
         return repository.findChildren(slug);
         }
 
     @RequestMapping("/teams/relatives/{slug}")
     @ResponseBody
-    public Team teamIncludingRelatives(Model model, @PathVariable String slug)
+    public Team teamIncludingRelatives(@PathVariable String slug)
         {
         return repository.findBySlug(slug);
         }
 
-    @RequestMapping("/teams/hierarchy/all")
+    @RequestMapping("/teams/hierarchy/{slug}")
     @ResponseBody
-    public List<TeamRelation> teamHierarchy(Model model)
+    public List<TeamRelation> teamHierarchy(@PathVariable String slug)
         {
 
         List<TeamRelation> teamHierarchy = new ArrayList<>();
 
-        List<Team> teams = repository.findHierarchy();
+        List<Team> teams;
+
+        if("all".equals(slug)){
+            teams =  repository.findCompleteHierarchy();
+        } else {
+            teams = repository.findHierarchyBelow(slug);
+        }
 
         for(Team team: teams){
             TeamRelation rootTemp = team.getTeamRelation();

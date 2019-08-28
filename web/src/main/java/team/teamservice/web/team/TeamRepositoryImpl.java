@@ -75,8 +75,6 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
 
         Team team = result.getUniqueMappedResult();
 
-        System.out.println(result.getRawResults());
-
         return team;
         }
 
@@ -104,8 +102,6 @@ public class TeamRepositoryImpl implements TeamRepositoryCustom
         AggregationResults<Team> result = mongoTemplate.aggregate(agg, Team.class);
 
         List<Team> teams = result.getMappedResults();
-
-        System.out.println(result.getRawResults());
 
         return teams;
         }

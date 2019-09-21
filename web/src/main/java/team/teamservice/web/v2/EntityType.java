@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EntityType
     {
+        COMPANY("Company"),
+        DOMAIN("Domain"),
+        PLATFORM("Platform"),
+        TEAM_OF_TEAMS("Team of Teams"),
         TEAM("Team"),
         APPLICATION("Application"),
         RELEASE("Release");

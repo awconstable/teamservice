@@ -1,16 +1,16 @@
-package team.teamservice.web.team;
+package team.teamservice.web.v2;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class TeamsController
+public class AdminInterfaceController
     {
 
-    @GetMapping("/teams")
-    public String teams(Model model)
+    @GetMapping("/v2/hierarchy_manager")
+    public String hierarchy(Model model)
         {
-        return "teams";
+        return "hierarchy";
         }
     }

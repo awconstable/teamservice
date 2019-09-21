@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teams</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+</head>
+<body>
+<div data-role="page">
+    <div data-role="header">
+        <h1>Hierarchy Manager</h1>
+    </div>
+<div id="message" data-role="popup" class="ui-content"></div>
+    <div role="main" class="ui-content">
+        <form id="team_form">
+            <div class="ui-field-contain">
+                <label for="hierarchyEntity">Entity :</label><select id="hierarchyEntity"></select>
+            </div>
+            <div class="ui-field-contain">
+                <label for="entityType">Type :</label><select id="entityType"></select>
+            </div>
+            <div class="ui-field-contain">
+                <label for="slug">ID :</label><input type="text" id="slug" name="slug">
+            </div>
+            <div class="ui-field-contain">
+                <label for="name">Name :</label><input type="text" id="name" name="name">
+            </div>
+            <div class="ui-field-contain">
+                <label for="parent">Parent :</label><select id="parent"></select>
+            </div>
+            <div class="ui-field-contain">
+                <label for="members_email">Member Email's :</label>
+                <ul id="members_email" data-role="listview">
+                </ul>
+            </div>
+            <div class="ui-field-contain">
+                <label for="add_members_email">Add a members email :</label>
+                <input type="text" id="add_members_email" name="add_members_email">
+                <button id="add_members_email_button" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-inline">Add</button>
+            </div>
+            <br>
+            <div class="ui-field-contain">
+                <label for="application_ids">Application ID's :</label>
+                <ul id="application_ids" data-role="listview">
+                </ul>
+            </div>
+            <br>
+            <div class="ui-field-contain">
+                <label for="add_application_id">Add an Application ID :</label>
+                <input type="text" id="add_application_id" name="add_application_id">
+                <button id="add_application_id_button" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-inline">Add</button>
+            </div>
+            <div class="ui-field-contain">
+                <button class="ui-btn ui-shadow ui-corner-all ui-btn-b" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+    <div data-role="footer">
+        
+    </div>
+</div>
+<script type="text/javascript">
+
+    var addApplicationIdElement = $("#add_application_id");
+
+    $("#add_application_id_button").click(function () {
+        if(validateNoDuplicates($("#application_ids li"), addApplicationIdElement.val(), "Duplicate application id's are not allowed") || addApplicationIdElement.val() === ""){
+            return;
+        }
+        appendToList($("#application_ids"), addApplicationIdElement.val());
+        addApplicationIdElement.val("");
+    });
+
+    var addMembersEmailElement = $("#add_members_email");
+
+    $("#add_members_email_button").click(function () {
+        if(validateNoDuplicates($("#members_email li"), addMembersEmailElement.val(), "Duplicate email address' are not allowed") || validateEmail(addMembersEmailElement.val())) {
+            return;
+        }
+        appendToList($("#members_email"), addMembersEmailElement.val());
+        addMembersEmailElement.val("");
+    });
+
+    function validate() {
+        var messageElement = $("#message");
+        var slugElem = $("#slug");
+        var parentElem = $("#parent");
+        if(parentElem.val() !== "" && slugElem.val() === parentElem.val()){
+            messageElement.text("An entity cannot be a parent of itself");
+            messageElement.popup("open");
+            return true;
+        }
+
+        if(entityTypeElement.val() === ""){
+            messageElement.text("Entity type must be specified");
+            messageElement.popup("open");
+            return true;
+        }
+
+        var input = slugElem.val();
+        var re = /[^a-z0-9_\-]+/g;
+        var test = re.test(input);
+        if (test) {
+            messageElement.text("Entity Id must contain lower case letters, numbers and _ or - only");
+            messageElement.popup("open");
+        }
+        return test;
+    }
+
+    function validateNoDuplicates(parentListElem, value, msg){
+        var lowerValue = value.toLowerCase();
+        var valid = false;
+        parentListElem.each(function(i, elem){
+            if(lowerValue === $(elem).text().trim().toLowerCase()){
+                var messageElem = $("#message");
+                messageElem.text(msg);
+                messageElem.popup("open");
+                return valid = true;
+            }
+        });
+        return valid;
+    }
+
+    function validateEmail(email) {
+
+        if(email === ""){
+            return true;
+        }
+
+        var regex = /^([a-zA-Z0-9_.'+-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test(email)) {
+            var messageElem = $("#message");
+            messageElem.text("Invalid email address");
+            messageElem.popup("open");
+            return true;
+        }
+        return false;
+    }
+
+    var frm = $('#team_form');
+
+    frm.submit(function (e) {
+
+        e.preventDefault();
+        
+        var slug = $("#slug");
+        var name = $("#name");
+        var messageElement =   $("#message");
+
+        if (slug.val() === "") {
+            messageElement.text("Entity Id Required");
+            messageElement.popup("open");
+            return;
+        }
+        if (validate()) {
+            return;
+        }
+
+        var memberEmails = [];
+        $("#members_email li").each(function(i, elem) {
+            var member = {
+                email: $(elem).text().trim().toLowerCase()
+            };
+            memberEmails.push(member);
+        });
+
+        var applicationIds = [];
+        $("#application_ids li").each(function(i, elem) {
+            var application = {
+                applicationId: $(elem).text().trim()
+            };
+            applicationIds.push(application);
+        });
+
+        var hierarchyEntity = {
+            slug: slug.val(),
+            entityType: entityTypeElement.val(),
+            name: name.val(),
+            parentSlug: $("#parent").val(),
+            members: memberEmails,
+            applicationIds: applicationIds
+        };
+
+        var method = "POST";
+        var url = "/v2/data/hierarchy/";
+
+        if (hierarchyElement.val() !== "") {
+            method = "PATCH";
+            url = hierarchyElement.val();
+        }
+
+        saveTeam(method, url, hierarchyEntity).then(function(x){
+            console.log('Submission was successful');
+
+            loadEntities().then(function(a){
+                processEntityList(a);
+            }).then(function(){
+                var hierarchyEntity = x._links.self.href;
+                console.log(hierarchyEntity);
+                cb(x);
+                messageElement.text("Entity Saved");
+                messageElement.popup("open");
+            });
+        }).fail(function (xhr) {
+            console.log('An error occurred');
+            messageElement.text("Entity Save Failed : " + xhr.responseJSON.message);
+            messageElement.popup("open");
+        });
+        
+        return false;
+
+    });
+
+    function saveTeam(method, url, hierarchyEntity){
+        console.log("Save hierarchyEntity :" + hierarchyEntity);
+        return $.ajax({
+            method: method,
+            url: url,
+            data: JSON.stringify(hierarchyEntity),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    }
+
+    var listIdCount = 0;
+
+    function appendToList(elem, value){
+        var listId = listIdCount;
+        elem.append('<li id="list-item-' + listId + '" class="ui-li-static ui-body-inherit ui-first-child ui-last-child">' + value + '</li><a id="list-delete-button-' + listId + '" href="#" class="ui-btn ui-btn-inline">Delete</a>');
+        $('#list-delete-button-' + listId).click(function(){
+            $('#list-item-' + listId ).remove();
+            $(this).remove();
+        });
+        listIdCount++;
+    }
+
+    function cb(data) {
+        var element = $("#hierarchyEntity");
+
+        console.log(data);
+        element.val(data._links.self.href);
+
+        entityTypeElement.val(data.entityType.key);
+
+        var slugElem = $("#slug");
+        slugElem.prop( "disabled", true );
+        slugElem.val(data.slug);
+        $("#name").val(data.name);
+        parentElement.val(data.parentSlug);
+
+        element.selectmenu("refresh", true);
+        parentElement.selectmenu("refresh", true);
+        entityTypeElement.selectmenu("refresh", true);
+
+        var membersEmailElement = $("#members_email");
+        membersEmailElement.empty();
+        if(data.members != null) {
+            for (var i = 0; i < data.members.length; i++) {
+                appendToList(membersEmailElement, data.members[i].email);
+            }
+        }
+
+        var applicationIdsElement = $("#application_ids");
+        applicationIdsElement.empty();
+        if(data.applicationIds != null) {
+            for (var j = 0; j < data.applicationIds.length; j++) {
+                appendToList(applicationIdsElement, data.applicationIds[j].applicationId);
+            }
+        }
+    }
+
+    function loadEntities() {
+        console.log("Loading hierarchyEntities");
+        return $.ajax({
+            method: "GET",
+            url: "/v2/data/hierarchy?size=1000"
+        });
+    }
+
+    function loadEntityTypes() {
+        console.log("Loading Entity Types");
+        return $.ajax({
+            method: "GET",
+            url: "/v2/api/entity/types"
+        });
+    }
+
+    var hierarchyElement = $('#hierarchyEntity');
+    var parentElement = $('#parent');
+    var entityTypeElement = $('#entityType');
+
+    function processEntityList(data){
+
+        var hierarchyEntities = data._embedded.hierarchy;
+
+        hierarchyElement.empty();
+        hierarchyElement.append('<option value="">Select</option>');
+        parentElement.empty();
+        parentElement.append('<option value="">Select</option>');
+
+        for (var i = 0; i < hierarchyEntities.length; i++) {
+            hierarchyElement.append('<option value="' + hierarchyEntities[i]._links.self.href + '">' + hierarchyEntities[i].name + '</option>');
+            parentElement.append('<option value="' + hierarchyEntities[i].slug + '">' + hierarchyEntities[i].name + '</option>');
+        }
+    }
+
+    function processEntityTypesList(data){
+
+        entityTypeElement.empty();
+        entityTypeElement.append('<option value="">Select</option>');
+
+        for (var i = 0; i < data.length; i++) {
+            entityTypeElement.append('<option value="' + data[i].key + '">' + data[i].name + '</option>');
+        }
+    }
+
+    $(loadEntityTypes().done(processEntityTypesList));
+    $(loadEntities().done(processEntityList));
+
+    function loadEntity(entityId) {
+        $("#message").text("");
+        if ("" === entityId) {
+            var slugElem = $("#slug");
+            slugElem.prop( "disabled", false );
+            slugElem.val("");
+            $("#name").val("");
+            entityTypeElement.val("");
+            entityTypeElement.selectmenu("refresh", true);
+            parentElement.val("");
+            parentElement.selectmenu("refresh", true);
+            $("#members_email").empty();
+            $("#application_ids").empty();
+            return;
+        }
+
+        $.ajax({
+            method: "GET",
+            url: entityId,
+            success: function (data) {
+                cb(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    hierarchyElement.change(function () {
+         loadEntity(this.value);
+    });
+</script>
+
+</body>
+</html>

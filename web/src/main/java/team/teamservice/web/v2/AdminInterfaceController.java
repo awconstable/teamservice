@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminInterfaceController
     {
 
-    @GetMapping("/v2/hierarchy_manager")
+    @GetMapping("/hierarchy_manager")
     public String hierarchy(Model model)
         {
         return "hierarchy";

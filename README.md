@@ -21,13 +21,13 @@ A non-exhaustive list of known limitations:
 ### Add a team
 
 ```
- curl -H "Content-Type: application/json" -X POST -d '{"slug": "team-slug", "name": "Team Name"}' http://localhost:8080/team
+ curl -H "Content-Type: application/json" -X POST -d '{"slug": "slug", "entityType":"APPLICATION", "name": "Entity Name"}' http://localhost:8080/v2/data/hierarchy
 ```
 
 
 ### View and manage teams
 
-<http://localhost:8080/teams/>
+<http://localhost:8080/hierarchy_manager/>
 
 ---
 

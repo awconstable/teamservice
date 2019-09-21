@@ -47,87 +47,12 @@ public class TeamRepositoryTest
         }
 
     @Test
-    public void findBySlugTest()
-        {
-
-        Team team = repository.findBySlug("team1");
-
-        assertThat(team.getName()).isEqualTo("Team 1");
-        }
-
-    @Test
-    public void checkFindByTeamMemberEmail()
-        {
-        List<Team> teams = repository.findByTeamMembersEmailIgnoreCase("Email1@Test.Test");
-
-        assertThat(teams.size()).isEqualTo(1);
-
-        Collection<TeamMember> members = teams.get(0).getTeamMembers();
-        boolean emailMatch = false;
-        for(TeamMember member:members){
-            if("email1@test.test".equals(member.getEmail())){
-                emailMatch = true;
-            }
-        }
-        
-        assertThat(emailMatch).isEqualTo(true);
-        }
-
-    @Test
     public void findAllTest()
         {
 
         List<Team> teams = repository.findAll();
 
         assertThat(teams.size()).isEqualTo(5);
-        }
-
-    @Test
-    public void findAncestors()
-        {
-
-        List<Team> ancestorTeams = repository.findAncestors(teams.get("team5").getSlug());
-        
-        assertThat(ancestorTeams.size()).isEqualTo(1);
-
-        assertThat(ancestorTeams.get(0).getAncestors().size()).isEqualTo(4);
-        }
-
-    @Test
-    public void findChildren()
-        {
-
-        List<Team> childTeams = repository.findChildren(teams.get("team1").getSlug());
-
-        assertThat(childTeams.size()).isEqualTo(1);
-
-        assertThat(childTeams.get(0).getChildren().size()).isEqualTo(4);
-        }
-
-    @Test
-    public void findCompleteHierarchy()
-        {
-
-        List<Team> childTeams = repository.findCompleteHierarchy();
-
-        assertThat(childTeams.size()).isEqualTo(1);
-
-        assertThat(childTeams.get(0).getSlug()).isEqualTo("team1");
-
-        assertThat(childTeams.get(0).getChildren().size()).isEqualTo(4);
-        }
-
-    @Test
-    public void findFilteredHierarchy()
-        {
-
-        List<Team> childTeams = repository.findHierarchyBelow(teams.get("team2").getSlug());
-        
-        assertThat(childTeams.size()).isEqualTo(1);
-
-        assertThat(childTeams.get(0).getSlug()).isEqualTo("team2");
-
-        assertThat(childTeams.get(0).getChildren().size()).isEqualTo(3);
         }
 
     }

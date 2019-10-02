@@ -41,19 +41,8 @@ public class HierarchyController
         return repository.findBySlug(slug);
         }
 
-    @RequestMapping("/{slug}")
-    public List<Relation> hierarchy(@PathVariable String slug)
-        {
-
+    private List<Relation> processHierarchy(List<HierarchyEntity> hierarchyEntities){
         List<Relation> hierarchy = new ArrayList<>();
-
-        List<HierarchyEntity> hierarchyEntities;
-
-        if("all".equals(slug)){
-            hierarchyEntities =  repository.findCompleteHierarchy();
-        } else {
-            hierarchyEntities = repository.findHierarchyBelow(slug);
-        }
 
         for(HierarchyEntity hierarchyEntity : hierarchyEntities){
             Relation rootTemp = hierarchyEntity.getRelation();
@@ -65,12 +54,28 @@ public class HierarchyController
             hierarchy.add(root);
         }
 
-         return hierarchy;
+        return hierarchy;
+    }
+
+    @RequestMapping("/complete")
+    public List<Relation> completeHierarchy()
+        {
+        List<HierarchyEntity> hierarchyEntities =  repository.findCompleteHierarchy();
+
+        return processHierarchy(hierarchyEntities);
+        }
+
+    @RequestMapping("/complete/{slug}")
+    public List<Relation> completeHierarchyBySlug(@PathVariable String slug)
+        {
+        List<HierarchyEntity> hierarchyEntities = repository.findHierarchyBelow(slug);
+
+        return processHierarchy(hierarchyEntities);
         }
 
     @RequestMapping("/all")
     @ResponseBody
-    public List<HierarchyEntity> completeHierarchy()
+    public List<HierarchyEntity> findAllHierarchy()
         {
         return repository.findAll();
         }

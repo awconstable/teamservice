@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import team.teamservice.web.team.*;
 import team.teamservice.web.v2.*;
+import team.teamservice.web.v2.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -41,7 +43,7 @@ public class MigrationController
                 if(existingTeam == null){
                     HierarchyEntity newEntity = new HierarchyEntity(team.getSlug(), EntityType.TEAM,
                             team.getName(), team.getParentSlug(), convertRelations(team.getAncestors()),
-                            convertRelations(team.getChildren()), convertMembers(team.getTeamMembers()),
+                            convertRelations(team.getChildren()), Collections.EMPTY_LIST, convertMembers(team.getTeamMembers()),
                             convertApplicationIds(team.getApplications()));
                     hierarchyRepository.save(newEntity);
                     entityMigrationCount++;

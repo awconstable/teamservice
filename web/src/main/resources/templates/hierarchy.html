@@ -32,6 +32,18 @@
                 <label for="parent">Parent :</label><select id="parent"></select>
             </div>
             <div class="ui-field-contain">
+                <label for="work_tracking_tools">Work Tracking Tools :</label>
+                <ul id="work_tracking_tools" data-role="listview">
+                </ul>
+            </div>
+            <div class="ui-field-contain">
+                <label for="add_work_tracking_tool">Add a work tracking tool :</label>
+                <select id="add_work_tracking_tool_type"></select>
+                <input type="text" id="add_work_tracking_tool" name="add_work_tracking_tool">
+                <button id="add_work_tracking_tool_button" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-inline">Add</button>
+            </div>
+            <br>
+            <div class="ui-field-contain">
                 <label for="members_email">Member Email's :</label>
                 <ul id="members_email" data-role="listview">
                 </ul>
@@ -63,6 +75,16 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    var addWorkTrackingToolElement = $("#add_work_tracking_tool");
+
+    $("#add_work_tracking_tool_button").click(function () {
+        if(validateNoDuplicates($("#work_tracking_tools li"), workingTrackingTypeElement.val() + addWorkTrackingToolElement.val(), "Duplicate work tracking tool url's are not allowed") || addWorkTrackingToolElement.val() === ""){
+            return;
+        }
+        appendToTypeList($("#work_tracking_tools"), addWorkTrackingToolElement.val(), workingTrackingTypeElement.val());
+        addWorkTrackingToolElement.val("");
+    });
 
     var addApplicationIdElement = $("#add_application_id");
 
@@ -159,6 +181,16 @@
             return;
         }
 
+        var workTrackingTools = [];
+        $("#work_tracking_tools li").each(function(i, elem) {
+            var typeElem =  '#' + elem.id + '-type';
+            var tool = {
+                url: $(elem).text().trim().toLowerCase(),
+                type: $(typeElem).val()
+            };
+            workTrackingTools.push(tool);
+        });
+
         var memberEmails = [];
         $("#members_email li").each(function(i, elem) {
             var member = {
@@ -180,6 +212,7 @@
             entityType: entityTypeElement.val(),
             name: name.val(),
             parentSlug: $("#parent").val(),
+            workTrackingTools: workTrackingTools,
             members: memberEmails,
             applicationIds: applicationIds
         };
@@ -237,6 +270,17 @@
         listIdCount++;
     }
 
+    function appendToTypeList(elem, value, type){
+        var listId = listIdCount;
+        elem.append('<li id="list-item-' + listId + '" class="ui-li-static ui-body-inherit ui-first-child ui-last-child">' + value + '</li><input id="list-item-' + listId + '-type" type="text" disabled="true" value="' + type + '"><a id="list-delete-button-' + listId + '" href="#" class="ui-btn ui-btn-inline">Delete</a>');
+        $('#list-delete-button-' + listId).click(function(){
+            $('#list-item-' + listId ).remove();
+            $('#list-item-' + listId + '-type').remove();
+            $(this).remove();
+        });
+        listIdCount++;
+    }
+
     function cb(data) {
         var element = $("#hierarchyEntity");
 
@@ -254,6 +298,15 @@
         element.selectmenu("refresh", true);
         parentElement.selectmenu("refresh", true);
         entityTypeElement.selectmenu("refresh", true);
+
+        var workTrackingToolsElement = $("#work_tracking_tools");
+        workTrackingToolsElement.empty();
+        if(data.workTrackingTools != null) {
+            for (var i = 0; i < data.workTrackingTools.length; i++) {
+                console.log(data.workTrackingTools[i]);
+                appendToTypeList(workTrackingToolsElement, data.workTrackingTools[i].url, data.workTrackingTools[i].type.key);
+            }
+        }
 
         var membersEmailElement = $("#members_email");
         membersEmailElement.empty();
@@ -288,9 +341,18 @@
         });
     }
 
+    function loadWorkTrackingTypes() {
+        console.log("Loading Work Tracking Tool Types");
+        return $.ajax({
+            method: "GET",
+            url: "/v2/api/worktracking/types"
+        });
+    }
+
     var hierarchyElement = $('#hierarchyEntity');
     var parentElement = $('#parent');
     var entityTypeElement = $('#entityType');
+    var workingTrackingTypeElement = $('#add_work_tracking_tool_type');
 
     function processEntityList(data){
 
@@ -317,8 +379,19 @@
         }
     }
 
+    function processWorkTrackingToolTypesList(data){
+
+        workingTrackingTypeElement.empty();
+        workingTrackingTypeElement.append('<option value="">Select</option>');
+
+        for (var i = 0; i < data.length; i++) {
+            workingTrackingTypeElement.append('<option value="' + data[i].key + '">' + data[i].name + '</option>');
+        }
+    }
+
     $(loadEntityTypes().done(processEntityTypesList));
     $(loadEntities().done(processEntityList));
+    $(loadWorkTrackingTypes().done(processWorkTrackingToolTypesList));
 
     function loadEntity(entityId) {
         $("#message").text("");
@@ -331,6 +404,9 @@
             entityTypeElement.selectmenu("refresh", true);
             parentElement.val("");
             parentElement.selectmenu("refresh", true);
+            workingTrackingTypeElement.val("");
+            workingTrackingTypeElement.selectmenu("refresh", true);
+            $("#work_tracking_tools").empty();
             $("#members_email").empty();
             $("#application_ids").empty();
             return;

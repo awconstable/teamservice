@@ -1,4 +1,4 @@
-package team.teamservice.web.v2;
+package team.teamservice.web.v2.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

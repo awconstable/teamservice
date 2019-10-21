@@ -1,5 +1,7 @@
 package team.teamservice.web.v2;
 
+import team.teamservice.web.v2.entity.EntityType;
+
 import java.util.Collection;
 
 public class Relation

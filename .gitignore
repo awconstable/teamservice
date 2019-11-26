@@ -32,3 +32,8 @@ target
 
 # Vagrant
 .vagrant
+
+#VS Code
+.project
+.settings
+.classpath

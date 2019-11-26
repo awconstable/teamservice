@@ -354,9 +354,17 @@
     var entityTypeElement = $('#entityType');
     var workingTrackingTypeElement = $('#add_work_tracking_tool_type');
 
+    function sortTeams(teams) {
+        teams.sort(function (a, b) {
+            return a.name.localeCompare(b.name);
+        });
+    }
+
     function processEntityList(data){
 
         var hierarchyEntities = data._embedded.hierarchy;
+
+        sortTeams(hierarchyEntities);
 
         hierarchyElement.empty();
         hierarchyElement.append('<option value="">Select</option>');

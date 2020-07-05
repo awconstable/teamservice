@@ -16,5 +16,6 @@ Vagrant.configure(2) do |config|
 
   config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "0.0.0.0", id: "spring_boot"
   config.vm.network "forwarded_port", guest: 8081, host: 8081, host_ip: "0.0.0.0", id: "spring_boot_2"
+  config.vm.network "forwarded_port", guest: 9090, host: 9090, host_ip: "0.0.0.0", id: "prometheus"
   config.vm.network "forwarded_port", guest: 27017, host: 27017, host_ip: "0.0.0.0", id: "mongo_db"
 end

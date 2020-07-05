@@ -14,6 +14,15 @@ services:
       #   hard: 1
     volumes:
       - mongodata:/data/db
+  prom:
+    container_name: prometheus_container
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - teamnetwork
+    volumes:
+      - "/vagrant/prometheus.yml:/etc/prometheus/prometheus.yml"
 volumes:
   mongodata:
 networks:

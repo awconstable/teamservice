@@ -1,18 +1,20 @@
 package team.teamservice.web.team;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataMongoTest
 public class TeamRepositoryTest
     {
@@ -20,9 +22,9 @@ public class TeamRepositoryTest
     @Autowired
     private TeamRepository repository;
 
-    private LinkedHashMap<String,Team> teams = new LinkedHashMap<>();
+    private final LinkedHashMap<String,Team> teams = new LinkedHashMap<>();
 
-    @Before
+    @BeforeEach
     public void setUp()
         {
 
@@ -40,7 +42,7 @@ public class TeamRepositoryTest
         repository.saveAll(teams.values());
         }
 
-    @After
+    @AfterEach
     public void clearDown()
         {
             repository.deleteAll();

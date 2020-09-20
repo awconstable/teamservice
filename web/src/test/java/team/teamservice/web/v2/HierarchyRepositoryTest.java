@@ -1,12 +1,12 @@
 package team.teamservice.web.v2;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import team.teamservice.web.v2.entity.EntityType;
 
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataMongoTest
 public class HierarchyRepositoryTest
     {
@@ -24,9 +24,9 @@ public class HierarchyRepositoryTest
     @Autowired
     private HierarchyRepository repository;
 
-    private LinkedHashMap<String, HierarchyEntity> entities = new LinkedHashMap<>();
+    private final LinkedHashMap<String, HierarchyEntity> entities = new LinkedHashMap<>();
 
-    @Before
+    @BeforeEach
     public void setUp()
         {
 
@@ -44,7 +44,7 @@ public class HierarchyRepositoryTest
         repository.saveAll(entities.values());
         }
 
-    @After
+    @AfterEach
     public void clearDown()
         {
         repository.deleteAll();

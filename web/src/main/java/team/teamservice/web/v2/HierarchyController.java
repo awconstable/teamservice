@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v2/hierarchy")
+@RequestMapping(value = "/v2/hierarchy", produces = "application/json")
 public class HierarchyController
     {
 
@@ -66,11 +66,12 @@ public class HierarchyController
         }
 
     @RequestMapping("/complete/{slug}")
-    public List<Relation> completeHierarchyBySlug(@PathVariable String slug)
+    public Relation completeHierarchyBySlug(@PathVariable String slug)
         {
-        List<HierarchyEntity> hierarchyEntities = repository.findHierarchyBelow(slug);
+            List<HierarchyEntity> hierarchyEntities = repository.findHierarchyBelow(slug);
 
-        return processHierarchy(hierarchyEntities);
+            List<Relation> relations = processHierarchy(hierarchyEntities);
+            return relations.get(0);
         }
 
     @RequestMapping("/all")

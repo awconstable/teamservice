@@ -23,6 +23,14 @@ services:
       - teamnetwork
     volumes:
       - "/vagrant/prometheus.yml:/etc/prometheus/prometheus.yml"
+  consul:
+    container_name: consul_container
+    image: consul
+    ports:
+      - "8500:8500"
+      - "8600:8600"
+    networks:
+        - teamnetwork
 volumes:
   mongodata:
 networks:

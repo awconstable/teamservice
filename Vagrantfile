@@ -14,8 +14,10 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "Copy user's git config", type:'file', source: '~/.gitconfig', destination: '.gitconfig'
 
-  config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "0.0.0.0", id: "spring_boot"
-  config.vm.network "forwarded_port", guest: 8081, host: 8081, host_ip: "0.0.0.0", id: "spring_boot_2"
+  config.vm.network "forwarded_port", guest: 8080, host: 8088, host_ip: "0.0.0.0", id: "spring_boot"
+  config.vm.network "forwarded_port", guest: 8081, host: 8089, host_ip: "0.0.0.0", id: "spring_boot_2"
+  config.vm.network "forwarded_port", guest: 8500, host: 8500, host_ip: "0.0.0.0", id: "consul_http"
+  config.vm.network "forwarded_port", guest: 8600, host: 8600, host_ip: "0.0.0.0", id: "consul_dns"
   config.vm.network "forwarded_port", guest: 9090, host: 9090, host_ip: "0.0.0.0", id: "prometheus"
   config.vm.network "forwarded_port", guest: 27017, host: 27017, host_ip: "0.0.0.0", id: "mongo_db"
 end

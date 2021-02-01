@@ -50,10 +50,9 @@ class HierarchyControllerTest
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
-
-        Relation expectedOutput = new Relation("team1", EntityType.TEAM, "Team 1", null, Collections.emptyList());
+ 
         String actualResponseBody = result.getResponse().getContentAsString();
 
-        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(expectedOutput));
+        assertThat(actualResponseBody).isEqualToIgnoringWhitespace("{\"slug\":\"team1\",\"entityType\":{\"key\":\"TEAM\",\"name\":\"Team\"},\"name\":\"Team 1\"}");
         }
     }

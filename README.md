@@ -3,6 +3,7 @@
 A proof of concept service to manage a hierarchy of teams
 
 [![CircleCI](https://circleci.com/gh/awconstable/teamservice.svg?style=shield)](https://circleci.com/gh/awconstable/teamservice)
+![CodeQL](https://github.com/awconstable/teamservice/workflows/CodeQL/badge.svg)
 [![codecov](https://codecov.io/gh/awconstable/teamservice/branch/master/graph/badge.svg)](https://codecov.io/gh/awconstable/teamservice)
 [![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/awconstable/teamservice.svg)](https://libraries.io/github/awconstable/teamservice)
 [![dockerhub](https://img.shields.io/docker/pulls/awconstable/teamservice.svg)](https://cloud.docker.com/repository/docker/awconstable/teamservice)

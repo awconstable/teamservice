@@ -15,18 +15,19 @@
     </div>
 <div id="message" data-role="popup" class="ui-content"></div>
     <div role="main" class="ui-content">
+        * Mandatory Fields
         <form id="team_form">
             <div class="ui-field-contain">
-                <label for="hierarchyEntity">Entity :</label><select id="hierarchyEntity"></select>
+                <label for="hierarchyEntity">Entity * :</label><select id="hierarchyEntity"></select>
             </div>
             <div class="ui-field-contain">
-                <label for="entityType">Type :</label><select id="entityType"></select>
+                <label for="entityType">Type * :</label><select id="entityType"></select>
             </div>
             <div class="ui-field-contain">
-                <label for="slug">ID :</label><input type="text" id="slug" name="slug">
+                <label for="slug">ID * (a-z, 0-9, _, -) :</label><input type="text" id="slug" name="slug">
             </div>
             <div class="ui-field-contain">
-                <label for="name">Name :</label><input type="text" id="name" name="name">
+                <label for="name">Name * :</label><input type="text" id="name" name="name">
             </div>
             <div class="ui-field-contain">
                 <label for="parent">Parent :</label><select id="parent"></select>
@@ -367,7 +368,7 @@
         sortTeams(hierarchyEntities);
 
         hierarchyElement.empty();
-        hierarchyElement.append('<option value="">Select</option>');
+        hierarchyElement.append('<option value="">Select / Create New</option>');
         parentElement.empty();
         parentElement.append('<option value="">Select</option>');
 
@@ -375,6 +376,8 @@
             hierarchyElement.append('<option value="' + hierarchyEntities[i]._links.self.href + '">' + hierarchyEntities[i].name + '</option>');
             parentElement.append('<option value="' + hierarchyEntities[i].slug + '">' + hierarchyEntities[i].name + '</option>');
         }
+        hierarchyElement.selectmenu("refresh", true);
+        parentElement.selectmenu("refresh", true);
     }
 
     function processEntityTypesList(data){
@@ -385,6 +388,7 @@
         for (var i = 0; i < data.length; i++) {
             entityTypeElement.append('<option value="' + data[i].key + '">' + data[i].name + '</option>');
         }
+        entityTypeElement.selectmenu("refresh", true);
     }
 
     function processWorkTrackingToolTypesList(data){
@@ -395,6 +399,7 @@
         for (var i = 0; i < data.length; i++) {
             workingTrackingTypeElement.append('<option value="' + data[i].key + '">' + data[i].name + '</option>');
         }
+        workingTrackingTypeElement.selectmenu("refresh", true);
     }
 
     $(loadEntityTypes().done(processEntityTypesList));

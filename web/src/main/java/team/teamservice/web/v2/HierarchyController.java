@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import team.teamservice.web.hierarchy.service.HierarchyService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,11 +16,13 @@ import java.util.List;
 public class HierarchyController
     {
 
+    private final HierarchyService hierarchyService;
     private final HierarchyRepository repository;
 
     @Autowired
-    public HierarchyController(HierarchyRepository repository)
+    public HierarchyController(HierarchyService hierarchyService, HierarchyRepository repository)
         {
+        this.hierarchyService = hierarchyService;
         this.repository = repository;
         }
 
@@ -34,6 +37,11 @@ public class HierarchyController
         {
         return repository.findChildren(slug);
         }
+
+    @RequestMapping("/children/application/ids/{slug}")
+    public Collection<String> applicationChildIds(@PathVariable String slug) {
+        return hierarchyService.getApplicationHierarchyIds(slug);
+    }
 
     @RequestMapping("/relatives/{slug}")
     public HierarchyEntity relatives(@PathVariable String slug)

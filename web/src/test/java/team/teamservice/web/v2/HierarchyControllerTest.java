@@ -1,6 +1,5 @@
 package team.teamservice.web.v2;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import team.teamservice.web.hierarchy.service.HierarchyService;
 import team.teamservice.web.v2.entity.EntityType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,11 +33,12 @@ class HierarchyControllerTest
 
     @MockBean
     private HierarchyRepository repository;
+    @MockBean
+    private HierarchyService service;
 
     @Test
     void ensureCompleteHierarchyBySlugIsSingleJsonObjectNotArray() throws Exception
         {
-        ObjectMapper objectMapper = new ObjectMapper();
         List<HierarchyEntity> teamsBelow = new ArrayList<>();
 
         HierarchyEntity entity = new HierarchyEntity("team1", EntityType.TEAM, "Team 1", null,
@@ -54,5 +56,20 @@ class HierarchyControllerTest
         String actualResponseBody = result.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace("{\"slug\":\"team1\",\"entityType\":{\"key\":\"TEAM\",\"name\":\"Team\"},\"name\":\"Team 1\"}");
+        }
+
+    @Test
+    public void checkChildApplicationIds() throws Exception
+        {
+        when(service.getApplicationHierarchyIds("team1")).thenReturn(Arrays.asList("team1", "team2", "team3"));
+
+        MvcResult result = mockMvc.perform(get("/v2/hierarchy/children/application/ids/team1").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String actualResponseBody = result.getResponse().getContentAsString();
+
+        assertThat(actualResponseBody).isEqualToIgnoringWhitespace("[\"team1\",\"team2\",\"team3\"]");
         }
     }

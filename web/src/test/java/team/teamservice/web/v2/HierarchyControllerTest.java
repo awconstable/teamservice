@@ -72,4 +72,19 @@ class HierarchyControllerTest
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace("[\"team1\",\"team2\",\"team3\"]");
         }
+
+    @Test
+    public void checkChildIds() throws Exception
+        {
+        when(service.getChildIds("team1")).thenReturn(Arrays.asList("team1", "team2", "team3"));
+
+        MvcResult result = mockMvc.perform(get("/v2/hierarchy/children/ids/team1").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String actualResponseBody = result.getResponse().getContentAsString();
+
+        assertThat(actualResponseBody).isEqualToIgnoringWhitespace("[\"team1\",\"team2\",\"team3\"]");
+        }
     }

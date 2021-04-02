@@ -11,4 +11,10 @@ public interface HierarchyService
          * @return a collection of applicationId's
          */
         Collection<String> getApplicationHierarchyIds(String applicationId);
+        /**
+         * A method to find the list of child id's under a node.
+         * @param applicationId the id of the application
+         * @return a collection of applicationId's
+         */
+        Collection<String> getChildIds(String applicationId);
     }

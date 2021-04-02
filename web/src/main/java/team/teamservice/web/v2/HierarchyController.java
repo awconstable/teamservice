@@ -43,6 +43,11 @@ public class HierarchyController
         return hierarchyService.getApplicationHierarchyIds(slug);
     }
 
+    @RequestMapping("/children/ids/{slug}")
+    public Collection<String> childIds(@PathVariable String slug) {
+        return hierarchyService.getChildIds(slug);
+    }
+
     @RequestMapping("/relatives/{slug}")
     public HierarchyEntity relatives(@PathVariable String slug)
         {

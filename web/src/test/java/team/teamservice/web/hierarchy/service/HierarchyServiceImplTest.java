@@ -91,4 +91,18 @@ class HierarchyServiceImplTest
         assertThat(teamIds.size(), is(equalTo(1)));
         verify(mockHierarchyRepo, times(1)).findBySlug(appId);
         }
+
+    @Test
+    void getChildIds()
+        {
+        String appId = "a1";
+        Collection<Relation> children = Collections.singletonList(new Relation("a2", EntityType.APPLICATION, "App 2", appId, Collections.emptyList()));
+        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.APPLICATION, "App 1", "", Collections.emptyList(), children, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        when(mockHierarchyRepo.findBySlug(appId)).thenReturn(entity);
+
+        Collection<String> teamIds = hierarchyService.getChildIds(appId);
+
+        assertThat(teamIds, hasItems("a1", "a2"));
+        verify(mockHierarchyRepo, times(1)).findBySlug(appId);
+        }
     }

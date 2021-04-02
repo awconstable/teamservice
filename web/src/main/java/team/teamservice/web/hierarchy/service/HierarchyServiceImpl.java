@@ -36,4 +36,17 @@ public class HierarchyServiceImpl implements HierarchyService
         }
         return teams;
         }
+
+    @Override
+    public Collection<String> getChildIds(String applicationId)
+        {
+        Set<String> teams = new HashSet<>();
+        teams.add(applicationId);
+        HierarchyEntity team = hierarchyRepository.findBySlug(applicationId);
+        if(team == null){
+            return teams;
+        }
+        team.getChildren().forEach(child -> teams.add(child.getSlug()));
+        return teams;
+        }
     }

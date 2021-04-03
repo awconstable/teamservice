@@ -30,15 +30,15 @@ public class HierarchyRepositoryTest
     public void setUp()
         {
 
-        HierarchyEntity team1 = new HierarchyEntity("team1", EntityType.TEAM, "Team 1", "", null, null, null, null, null);
+        HierarchyEntity team1 = new HierarchyEntity("team1", EntityType.TEAM, "Team 1", "", null, null, null);
         entities.put("team1", team1);
-        HierarchyEntity team2 = new HierarchyEntity("team2", EntityType.TEAM,"Team 2", team1.getSlug(), null, null, null,null, null);
+        HierarchyEntity team2 = new HierarchyEntity("team2", EntityType.TEAM,"Team 2", team1.getSlug(), null, null, null);
         entities.put("team2", team2);
-        HierarchyEntity team3 = new HierarchyEntity("team3", EntityType.TEAM,"Team 3", team2.getSlug(), null, null,null, Arrays.asList(new Member("email1@test.test",null), new Member("email2@test.test", null)), Arrays.asList(new ApplicationId("app1", null), new ApplicationId("app2", null)));
+        HierarchyEntity team3 = new HierarchyEntity("team3", EntityType.TEAM,"Team 3", team2.getSlug(), null, null, Arrays.asList(new Member("email1@test.test",null), new Member("email2@test.test", null)));
         entities.put("team3", team3);
-        HierarchyEntity team4 = new HierarchyEntity("team4", EntityType.TEAM,"Team 4", team3.getSlug(), null, null, null, Arrays.asList(new Member("email3@test.test",null), new Member("email4@test.test", null)), Arrays.asList(new ApplicationId("app3", null), new ApplicationId("app4", null)));
+        HierarchyEntity team4 = new HierarchyEntity("team4", EntityType.TEAM,"Team 4", team3.getSlug(), null, null, Arrays.asList(new Member("email3@test.test",null), new Member("email4@test.test", null)));
         entities.put("team4", team4);
-        HierarchyEntity team5 = new HierarchyEntity("team5", EntityType.APPLICATION,"Team 5", team4.getSlug(), null, null, null, Arrays.asList(new Member("email5@test.test",null), new Member("email6@test.test", null)), Arrays.asList(new ApplicationId("app5", null), new ApplicationId("app6", null),new ApplicationId("app7", null), new ApplicationId("app8", null)));
+        HierarchyEntity team5 = new HierarchyEntity("team5", EntityType.APPLICATION,"Team 5", team4.getSlug(), null, null, Arrays.asList(new Member("email5@test.test",null), new Member("email6@test.test", null)));
         entities.put("team5", team5);
 
         repository.saveAll(entities.values());

@@ -5,7 +5,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import team.teamservice.web.v2.entity.EntityType;
-import team.teamservice.web.v2.worktracking.WorkTrackingTool;
 
 import java.util.Collection;
 
@@ -22,11 +21,9 @@ public class HierarchyEntity
     private final String parentSlug;
     private final Collection<Relation> ancestors;
     private final Collection<Relation> children;
-    private final Collection<WorkTrackingTool> workTrackingTools;
     private final Collection<Member> members;
-    private final Collection<ApplicationId> applicationIds;
 
-    public HierarchyEntity(String slug, EntityType entityType, String name, String parentSlug, Collection<Relation> ancestors, Collection<Relation> children, Collection<WorkTrackingTool> workTrackingTools, Collection<Member> members, Collection<ApplicationId> applicationIds)
+    public HierarchyEntity(String slug, EntityType entityType, String name, String parentSlug, Collection<Relation> ancestors, Collection<Relation> children, Collection<Member> members)
         {
         this.slug = slug;
         this.entityType = entityType;
@@ -34,9 +31,7 @@ public class HierarchyEntity
         this.parentSlug = parentSlug;
         this.ancestors = ancestors;
         this.children = children;
-        this.workTrackingTools = workTrackingTools;
         this.members = members;
-        this.applicationIds = applicationIds;
         }
 
     public String getId() { return id; }
@@ -59,11 +54,7 @@ public class HierarchyEntity
 
     public Collection<Relation> getChildren() { return children; }
 
-    public Collection<WorkTrackingTool> getWorkTrackingTools() { return workTrackingTools; }
-
     public Collection<Member> getMembers() { return members; }
-
-    public Collection<ApplicationId> getApplicationIds() { return applicationIds; }
 
     @JsonIgnore
     public Relation getRelation() {
@@ -74,16 +65,14 @@ public class HierarchyEntity
     public String toString()
         {
         return "HierarchyEntity{" +
-                "id='" + id + '\'' +
-                ", slug='" + slug + '\'' +
-                ", entityType=" + entityType +
-                ", name='" + name + '\'' +
-                ", parentSlug='" + parentSlug + '\'' +
-                ", ancestors=" + ancestors +
-                ", children=" + children +
-                ", workTrackingTools=" + workTrackingTools +
-                ", members=" + members +
-                ", applicationIds=" + applicationIds +
-                '}';
+            "id='" + id + '\'' +
+            ", slug='" + slug + '\'' +
+            ", entityType=" + entityType +
+            ", name='" + name + '\'' +
+            ", parentSlug='" + parentSlug + '\'' +
+            ", ancestors=" + ancestors +
+            ", children=" + children +
+            ", members=" + members +
+            '}';
         }
     }

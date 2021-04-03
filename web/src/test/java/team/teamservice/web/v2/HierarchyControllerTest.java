@@ -44,7 +44,7 @@ class HierarchyControllerTest
         HierarchyEntity entity = new HierarchyEntity("team1", EntityType.TEAM, "Team 1", null,
             Collections.singletonList(new Relation("team2", EntityType.TEAM, "Team 2", "team1",
                 Collections.singletonList(new Relation("team3", EntityType.TEAM, "Team 3", "team2",
-                    Collections.emptyList())))), Collections.emptyList(), null, null, null);
+                    Collections.emptyList())))), Collections.emptyList(), Collections.emptyList());
         teamsBelow.add(entity);
         when(repository.findHierarchyBelow("team1")).thenReturn(teamsBelow);
 

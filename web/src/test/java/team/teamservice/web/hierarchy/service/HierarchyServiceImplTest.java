@@ -43,7 +43,7 @@ class HierarchyServiceImplTest
         {
         String appId = "a1";
         Collection<Relation> children = Collections.singletonList(new Relation("a2", EntityType.APPLICATION, "App 2", appId, Collections.emptyList()));
-        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.APPLICATION, "App 1", "", Collections.emptyList(), children, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.APPLICATION, "App 1", "", Collections.emptyList(), children, Collections.emptyList());
         when(mockHierarchyRepo.findBySlug(appId)).thenReturn(entity);
 
         Collection<String> teamIds = hierarchyService.getApplicationHierarchyIds(appId);
@@ -56,7 +56,7 @@ class HierarchyServiceImplTest
     void getHierarchyIdsNoChildren()
         {
         String appId = "a1";
-        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.APPLICATION, "App 1", "", Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.APPLICATION, "App 1", "", Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         when(mockHierarchyRepo.findBySlug(appId)).thenReturn(entity);
 
         Collection<String> teamIds = hierarchyService.getApplicationHierarchyIds(appId);
@@ -82,7 +82,7 @@ class HierarchyServiceImplTest
         {
         String appId = "a1";
         Collection<Relation> children = Collections.singletonList(new Relation("a2", EntityType.APPLICATION, "App 2", appId, Collections.emptyList()));
-        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.TEAM_OF_TEAMS, "App 1", "", Collections.emptyList(), children, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.TEAM_OF_TEAMS, "App 1", "", Collections.emptyList(), children, Collections.emptyList());
         when(mockHierarchyRepo.findBySlug(appId)).thenReturn(entity);
 
         Collection<String> teamIds = hierarchyService.getApplicationHierarchyIds(appId);
@@ -97,7 +97,7 @@ class HierarchyServiceImplTest
         {
         String appId = "a1";
         Collection<Relation> children = Collections.singletonList(new Relation("a2", EntityType.APPLICATION, "App 2", appId, Collections.emptyList()));
-        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.APPLICATION, "App 1", "", Collections.emptyList(), children, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        HierarchyEntity entity = new HierarchyEntity(appId, EntityType.APPLICATION, "App 1", "", Collections.emptyList(), children, Collections.emptyList());
         when(mockHierarchyRepo.findBySlug(appId)).thenReturn(entity);
 
         Collection<String> teamIds = hierarchyService.getChildIds(appId);

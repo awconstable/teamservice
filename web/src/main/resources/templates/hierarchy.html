@@ -67,6 +67,7 @@
     function validate() {
         var messageElement = $("#message");
         var slugElem = $("#slug");
+            var nameElem = $("#name");
         var parentElem = $("#parent");
         if(parentElem.val() !== "" && slugElem.val() === parentElem.val()){
             messageElement.text("An entity cannot be a parent of itself");
@@ -80,14 +81,33 @@
             return true;
         }
 
-        var input = slugElem.val();
+        if (slugElem.val() === "") {
+            messageElement.text("Entity Id required");
+            messageElement.popup("open");
+            return true;
+        }
+        
         var re = /[^a-z0-9_\-]+/g;
-        var test = re.test(input);
-        if (test) {
+        if (re.test(slugElem.val())) {
             messageElement.text("Entity Id must contain lower case letters, numbers and _ or - only");
             messageElement.popup("open");
+            return true;
         }
-        return test;
+
+        if (nameElem.val() === "") {
+            messageElement.text("Entity Name required");
+            messageElement.popup("open");
+            return true;
+        }
+        
+        var re2 = /[^a-zA-Z0-9_&(){}\[\]\-\s]+/g;
+        if (re2.test(nameElem.val())) {
+            messageElement.text("Entity Name must contain letters, numbers, spaces and &_(){}[]- only");
+            messageElement.popup("open");
+            return true;
+        }
+        
+        return false;
     }
 
     function validateNoDuplicates(parentListElem, value, msg){
@@ -129,12 +149,7 @@
         var slug = $("#slug");
         var name = $("#name");
         var messageElement =   $("#message");
-
-        if (slug.val() === "") {
-            messageElement.text("Entity Id Required");
-            messageElement.popup("open");
-            return;
-        }
+        
         if (validate()) {
             return;
         }
@@ -203,17 +218,6 @@
         elem.append('<li id="list-item-' + listId + '" class="ui-li-static ui-body-inherit ui-first-child ui-last-child">' + value + '</li><a id="list-delete-button-' + listId + '" href="#" class="ui-btn ui-btn-inline">Delete</a>');
         $('#list-delete-button-' + listId).click(function(){
             $('#list-item-' + listId ).remove();
-            $(this).remove();
-        });
-        listIdCount++;
-    }
-
-    function appendToTypeList(elem, value, type){
-        var listId = listIdCount;
-        elem.append('<li id="list-item-' + listId + '" class="ui-li-static ui-body-inherit ui-first-child ui-last-child">' + value + '</li><input id="list-item-' + listId + '-type" type="text" disabled="true" value="' + type + '"><a id="list-delete-button-' + listId + '" href="#" class="ui-btn ui-btn-inline">Delete</a>');
-        $('#list-delete-button-' + listId).click(function(){
-            $('#list-item-' + listId ).remove();
-            $('#list-item-' + listId + '-type').remove();
             $(this).remove();
         });
         listIdCount++;

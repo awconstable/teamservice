@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import team.teamservice.web.v2.entity.EntityType;
 
@@ -15,6 +16,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @DataMongoTest
@@ -135,5 +138,15 @@ public class HierarchyRepositoryTest
 
         assertThat(childTeams.get(0).getChildren().size()).isEqualTo(3);
         }
+    
+    @Test
+    public void duplicateSlugThrowsException()
+        {
+        HierarchyEntity team1 = new HierarchyEntity("team1", EntityType.TEAM, "Team 1", "", null, null, null);
+        Exception exception = assertThrows(DuplicateKeyException.class, () -> {
+            repository.save(team1);
+        });
 
+        assertTrue(exception.getMessage().contains("E11000 duplicate key error collection"));
+        }
     }
